@@ -1,0 +1,6 @@
+﻿.vite/
+dist/
+node_modules/
+AuraProject/node_modules/
+AuraProject/dist/
+vite5173.log
