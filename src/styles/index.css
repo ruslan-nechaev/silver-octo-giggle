@@ -1,0 +1,99 @@
+/* [ПОДСКАЗКА] Tailwind + кастомные стили для ауры и рамок.
+   - В сборке используется PostCSS.
+   - Слои для визуальных эффектов и уровней ауры. */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --aura-glow: 0 0 60px rgba(99, 102, 241, 0.35);
+  }
+  /* Font for text-glow-hover demo */
+  @import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap');
+}
+
+@layer components {
+  .aura-ring {
+    @apply shadow-aura rounded-full border border-aura-500/60;
+  }
+  .aura-frame {
+    @apply ring-1 ring-aura-400/30 rounded-xl bg-slate-900/50 backdrop-blur-md;
+  }
+  /* Silk typography helper (from silk background demo) */
+  .silk-type {
+    font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    letter-spacing: 0.01em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  /* Ripple loader styles */
+  .loader { position: relative; width: 240px; height: 240px; --logo-color:#6dd5ed; border-radius: 9999px; overflow: hidden; background: radial-gradient(circle at 50% 45%, #2f2f2f 0%, #252525 65%, #1a1a1a 100%); box-shadow: inset 0 8px 18px rgba(255,255,255,0.04), inset 0 -12px 26px rgba(0,0,0,0.5), 0 12px 22px rgba(0,0,0,0.35); }
+  .loader .box { position:absolute; inset:0; border-radius:9999px; pointer-events:none; }
+  /* Тонкие концентрические кольца (без заполнения) */
+  .loader .box:nth-child(1) { background: radial-gradient(circle, transparent 62%, rgba(255,255,255,0.08) 62%, rgba(255,255,255,0.08) 64%, transparent 64%); animation: ripple 2.4s ease-in-out infinite; }
+  .loader .box:nth-child(2) { background: radial-gradient(circle, transparent 70%, rgba(255,255,255,0.06) 70%, rgba(255,255,255,0.06) 72%, transparent 72%); animation: ripple 2.4s ease-in-out infinite; animation-delay:.3s; }
+  .loader .box:nth-child(3) { background: radial-gradient(circle, transparent 78%, rgba(255,255,255,0.05) 78%, rgba(255,255,255,0.05) 80%, transparent 80%); animation: ripple 2.4s ease-in-out infinite; animation-delay:.6s; }
+  .loader .box:nth-child(4) { background: radial-gradient(circle, transparent 86%, rgba(255,255,255,0.04) 86%, rgba(255,255,255,0.04) 88%, transparent 88%); animation: ripple 2.4s ease-in-out infinite; animation-delay:.9s; }
+  /* центральный знак остаётся один; "дыхание" фона делает элемент живым */
+  @keyframes breathe {
+    0%, 100% { transform: scale(1); box-shadow: inset 0 6px 12px rgba(255,255,255,0.05), inset 0 -10px 24px rgba(0,0,0,0.45), 0 10px 20px rgba(0,0,0,0.35); }
+    50% { transform: scale(1.03); box-shadow: inset 0 10px 16px rgba(255,255,255,0.06), inset 0 -14px 28px rgba(0,0,0,0.5), 0 14px 26px rgba(0,0,0,0.4); }
+  }
+  .loader .box:nth-child(1) { animation-delay: 0s; }
+  .loader .box:nth-child(2) { animation-delay: 0.4s; }
+  .loader .box:nth-child(3) { animation-delay: 0.8s; }
+  .loader .box:nth-child(4) { animation-delay: 1.2s; }
+  .loader .logo { position:absolute; inset: 0; display:flex; align-items:center; justify-content:center; }
+  .loader .svg { width: 24px; height: 24px; fill: var(--logo-color); animation: color-change 2.4s ease-in-out infinite; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.35)); }
+}
+
+@layer utilities {
+  .aura-glow {
+    filter: drop-shadow(var(--aura-glow));
+  }
+  /* Hide scrollbars but keep scrolling */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  /* Enable smooth touch vertical panning */
+  .touch-pan-y { touch-action: pan-y; }
+}
+@keyframes ripple {
+  0% { transform: scale(1); box-shadow: rgba(0,0,0,0.3) 0 10px 10px 0; }
+  50% { transform: scale(1.3); box-shadow: rgba(0,0,0,0.3) 0 30px 20px 0; }
+  100% { transform: scale(1); box-shadow: rgba(0,0,0,0.3) 0 10px 10px 0; }
+}
+
+@keyframes color-change {
+  0% { fill: var(--logo-color); }
+  50% { fill: white; }
+  100% { fill: var(--logo-color); }
+}
+
+/* WeatherButton animations (global helpers per spec) */
+@keyframes wind {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 50% 100%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes slay-1 {
+  0% { transform: rotate(10deg); }
+  50% { transform: rotate(-5deg); }
+  100% { transform: rotate(10deg); }
+}
+
+@keyframes slay-2 {
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(15deg); }
+  100% { transform: rotate(0); }
+}
+
+@keyframes slay-3 {
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(-5deg); }
+  100% { transform: rotate(0); }
+}
+
+

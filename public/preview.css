@@ -1,0 +1,15 @@
+/* [ПОДСКАЗКА] Лёгкие стили для превью (без сборки).
+   - Аура: свечение, рамки, слой наложения.
+   - В сборке подключите src/styles/index.css с Tailwind. */
+
+.aura-preview {
+  --aura-glow: 0 0 60px rgba(99, 102, 241, 0.35);
+  filter: drop-shadow(var(--aura-glow));
+}
+
+/* Безопасные базовые стили для Reg.ru статической выдачи */
+html, body { height: 100%; }
+img, svg { display: block; max-width: 100%; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+
+

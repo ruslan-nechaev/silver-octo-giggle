@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <!-- [ПОДСКАЗКА] Превью без сборки: файл можно открыть напрямую.
+         - Контейнер по умолчанию: <div id="auraBody"></div>
+         - На localhost модуль Vite подключится автоматически. -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>AuraProject — Preview</title>
+    <link rel="icon" href="/favicon.ico" />
+    <style>
+      html, body { height: 100%; margin: 0; background: #000; }
+      #auraBody { height: 100vh; width: 100vw; }
+    </style>
+  </head>
+  <body>
+    <div id="auraBody"></div>
+
+    <!-- [ПОДСКАЗКА] Автоподключение модуля при запуске через dev-сервер (localhost/127.0.0.1) -->
+    <script>
+      (function(){
+        var isHttp = location.protocol.startsWith('http');
+        var isLocal = /localhost|127\.0\.0\.1/.test(location.hostname);
+        if (isHttp && isLocal) {
+          window.__AURA_MODULE_MODE = true;
+          var s = document.createElement('script');
+          s.type = 'module';
+          s.src = '/src/main.tsx';
+          document.body.appendChild(s);
+        }
+      })();
+    </script>
+  </body>
+  </html>
+
+
