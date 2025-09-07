@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite --open",
     "build": "vite build",
-    "postbuild": "powershell -NoProfile -ExecutionPolicy Bypass -Command Copy-Item -LiteralPath 'public/.htaccess' -Destination 'dist/.htaccess' -Force",
+    "postbuild": "node scripts/copy-htaccess.js",
     "preview": "vite preview --strictPort",
     "check": "tsc --noEmit -p tsconfig.json"
   },
