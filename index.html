@@ -16,20 +16,8 @@
   <body>
     <div id="auraBody"></div>
 
-    <!-- [ПОДСКАЗКА] Автоподключение модуля при запуске через dev-сервер (localhost/127.0.0.1) -->
-    <script>
-      (function(){
-        var isHttp = location.protocol.startsWith('http');
-        var isLocal = /localhost|127\.0\.0\.1/.test(location.hostname);
-        if (isHttp && isLocal) {
-          window.__AURA_MODULE_MODE = true;
-          var s = document.createElement('script');
-          s.type = 'module';
-          s.src = '/src/main.tsx';
-          document.body.appendChild(s);
-        }
-      })();
-    </script>
+    <!-- Vite entry for both dev and production builds -->
+    <script type="module" src="/src/main.tsx"></script>
   </body>
   </html>
 
