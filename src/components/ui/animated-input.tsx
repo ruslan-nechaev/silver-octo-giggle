@@ -108,6 +108,11 @@ export const OrbInput = React.memo(function OrbInput({ onSend }: OrbInputProps) 
     }
   }, [placeholderIndex, placeholders, isFocused, value])
 
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const next = e.target.value
+    setValue(next)
+  }, [])
+
   return (
     <form className="relative w-full max-w-[340px] md:max-w-[560px]" onSubmit={handleSend}>
       <div
@@ -146,11 +151,7 @@ export const OrbInput = React.memo(function OrbInput({ onSend }: OrbInputProps) 
             data-testid="orb-input"
             type="text"
             value={value}
-            onChange={(e) => {
-              const next = e.target.value
-              // Keep orb fixed on the right regardless of typing
-              setValue(next)
-            }}
+            onChange={handleChange}
             onFocus={() => setIsFocused(true)}
             onBlur={() => {
               setIsFocused(false)
@@ -163,9 +164,15 @@ export const OrbInput = React.memo(function OrbInput({ onSend }: OrbInputProps) 
             }}
             placeholder={`${displayedText}${isTyping ? "|" : ""}`}
             aria-label="Ask a question"
-            className={`w-full text-sm md:text-lg text-white placeholder-gray-400 bg-transparent border-none outline-none font-light ${
+            autoComplete="off"
+            autoCorrect="off"
+            spellCheck={false}
+            inputMode="text"
+            enterKeyHint="send"
+            className={`w-full text-sm md:text-lg text-white placeholder-gray-400 bg-transparent border-none outline-none font-light [font-variant-ligatures:none] ${
               isOrbRight ? "pl-4 pr-16 md:pl-6 md:pr-20" : "pl-16 pr-4 md:pl-20 md:pr-6"
             }`}
+            style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden', WebkitFontSmoothing: 'antialiased' as any }}
           />
         </div>
       </div>
