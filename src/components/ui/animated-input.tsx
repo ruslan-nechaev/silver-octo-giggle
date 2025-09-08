@@ -52,6 +52,13 @@ export function OrbInput({ onSend }: OrbInputProps) {
       timeoutRef.current = null
     }
 
+    // Pause placeholder animation while user is interacting/typing to prevent jank
+    if (isFocused || value.length > 0) {
+      setDisplayedText("")
+      setIsTyping(false)
+      return () => {}
+    }
+
     const current = placeholders[placeholderIndex]
     if (!current) {
       setDisplayedText("")
@@ -99,7 +106,7 @@ export function OrbInput({ onSend }: OrbInputProps) {
         timeoutRef.current = null
       }
     }
-  }, [placeholderIndex, placeholders])
+  }, [placeholderIndex, placeholders, isFocused, value])
 
   return (
     <form className="relative w-full max-w-[340px] md:max-w-[560px]" onSubmit={handleSend}>
