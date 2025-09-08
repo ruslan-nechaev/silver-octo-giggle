@@ -85,6 +85,9 @@ export default function RadialOrbitalTimeline({ timelineData, onExpandedChange, 
         angleRef.current = current;
         // Apply transform directly to avoid React re-renders
         orbitEl.style.transform = `translate(${centerOffset.x}px, ${centerOffset.y}px) rotate(${current}deg)`;
+        // Update CSS variables so children can counter-rotate and remain upright
+        orbitEl.style.setProperty('--aura-rot', `${current}deg`);
+        orbitEl.style.setProperty('--aura-rot-neg', `${-current}deg`);
         if (t < 1) {
           alignRafRef.current = requestAnimationFrame(step);
         } else {
@@ -146,21 +149,35 @@ export default function RadialOrbitalTimeline({ timelineData, onExpandedChange, 
     setAutoRotate(true);
   }, [collapseAllSignal]);
 
-  // Use CSS animation for continuous rotation to avoid per-frame React state updates
+  // rAF-driven rotation that also sets CSS variables for counter-rotation
   useEffect(() => {
-    if (!orbitRef.current) return;
     const el = orbitRef.current;
+    if (!el) return;
+    let raf: number | undefined;
+    const speedDegPerSec = 12;
+    const step = (ts: number) => {
+      if (!autoRotate) return;
+      if (!lastTsRef.current) lastTsRef.current = ts;
+      const dt = (ts - lastTsRef.current) / 1000;
+      lastTsRef.current = ts;
+      angleRef.current = (angleRef.current + speedDegPerSec * dt) % 360;
+      const a = angleRef.current;
+      el.style.transform = `translate(${centerOffset.x}px, ${centerOffset.y}px) rotate(${a}deg)`;
+      el.style.setProperty('--aura-rot', `${a}deg`);
+      el.style.setProperty('--aura-rot-neg', `${-a}deg`);
+      raf = requestAnimationFrame(step);
+    };
     if (autoRotate) {
-      el.style.animation = `aura-rotate 20s linear infinite`;
-      el.style.transform = `translate(${centerOffset.x}px, ${centerOffset.y}px)`;
+      raf = requestAnimationFrame(step);
     } else {
-      el.style.animation = "none";
-      el.style.transform = `translate(${centerOffset.x}px, ${centerOffset.y}px) rotate(${angleRef.current}deg)`;
+      const a = angleRef.current;
+      el.style.transform = `translate(${centerOffset.x}px, ${centerOffset.y}px) rotate(${a}deg)`;
+      el.style.setProperty('--aura-rot', `${a}deg`);
+      el.style.setProperty('--aura-rot-neg', `${-a}deg`);
     }
     return () => {
-      if (el) {
-        el.style.animation = "none";
-      }
+      if (raf) cancelAnimationFrame(raf);
+      lastTsRef.current = 0;
     };
   }, [autoRotate, centerOffset.x, centerOffset.y]);
 
@@ -207,7 +224,7 @@ export default function RadialOrbitalTimeline({ timelineData, onExpandedChange, 
             const nodeStyle = {
               top: '50%',
               left: '50%',
-              transform: `translate(-50%, -50%) translate(${pos.x}px, ${pos.y}px)`,
+              transform: `translate(-50%, -50%) translate(${pos.x}px, ${pos.y}px) rotate(var(--aura-rot-neg, 0deg))`,
               zIndex: isExpanded ? 200 : pos.zIndex,
               willChange: 'transform',
             } as React.CSSProperties;
