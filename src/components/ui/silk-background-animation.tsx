@@ -2,7 +2,9 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 
-export const Component = ({ showCopy = true }: { showCopy?: boolean }) => {
+type SilkProps = { showCopy?: boolean; mode?: 'full' | 'lite' }
+
+export const Component = ({ showCopy = true, mode = 'full' }: SilkProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>();
   const [isLoaded, setIsLoaded] = useState(false);
@@ -20,9 +22,10 @@ export const Component = ({ showCopy = true }: { showCopy?: boolean }) => {
     if (!ctx) return;
 
     let time = 0;
-    const speed = 0.02;
-    const scale = 2;
-    const noiseIntensity = 0.8;
+    const speed = mode === 'lite' ? 0.015 : 0.02;
+    const scale = mode === 'lite' ? 1.5 : 2;
+    const noiseIntensity = mode === 'lite' ? 0.6 : 0.8;
+    const pixelStep = mode === 'lite' ? 4 : 2;
 
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
@@ -40,7 +43,18 @@ export const Component = ({ showCopy = true }: { showCopy?: boolean }) => {
       return (rx * ry * (1 + x)) % 1;
     };
 
-    const animate = () => {
+    let last = 0;
+    const targetFps = mode === 'lite' ? 30 : 60;
+    const minFrameMs = 1000 / targetFps;
+
+    const animate = (now?: number) => {
+      if (mode === 'lite' && now != null) {
+        if (now - last < minFrameMs) {
+          animationRef.current = requestAnimationFrame(animate);
+          return;
+        }
+        last = now;
+      }
       const { width, height } = canvas;
       
       // Create gradient background
@@ -56,8 +70,8 @@ export const Component = ({ showCopy = true }: { showCopy?: boolean }) => {
       const imageData = ctx.createImageData(width, height);
       const data = imageData.data;
 
-      for (let x = 0; x < width; x += 2) {
-        for (let y = 0; y < height; y += 2) {
+      for (let x = 0; x < width; x += pixelStep) {
+        for (let y = 0; y < height; y += pixelStep) {
           const u = (x / width) * scale;
           const v = (y / height) * scale;
           
@@ -108,7 +122,7 @@ export const Component = ({ showCopy = true }: { showCopy?: boolean }) => {
       animationRef.current = requestAnimationFrame(animate);
     };
 
-    animate();
+    animationRef.current = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener('resize', resizeCanvas);

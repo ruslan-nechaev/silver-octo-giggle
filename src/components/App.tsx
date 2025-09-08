@@ -85,7 +85,8 @@ export function App(): JSX.Element {
 
   return (
     <div className="h-screen w-screen relative overflow-hidden bg-black rounded-none border-0 outline-none">
-      {/* Background animation disabled on main screen to improve interactivity performance */}
+      {/* Lightweight background on main screen for smoothness */}
+      <SilkBackground showCopy={false} mode="lite" />
       {/* Награда: чуть ниже верхнего края, чтобы не вылезала за рамку */}
       <div className="absolute inset-x-0 top-[5px] md:top-[8px] z-20 flex justify-center">
         <div className="relative w-[700px] h-[96px] md:w-[900px] md:h-[104px] overflow-visible">
@@ -110,7 +111,7 @@ export function App(): JSX.Element {
       {/* Временная навигация: при клике на кнопку показать экран таймлайна */}
       {showTimeline && (
         <div className="absolute inset-0 z-30 flex items-center justify-center">
-          <div className="w-full h-full md:scale-100 scale-[0.8] origin-center">
+          <div className="w-full h-full md:scale-100 scale-[0.8] origin-center transition-transform duration-500 ease-out">
             <RadialOrbitalTimeline
               timelineData={
                 planTimeline ?? [
@@ -181,7 +182,7 @@ export function App(): JSX.Element {
       )}
 
       {/* Нижняя панель: всегда видна, при таймлайне чат скрыт */}
-      <div className="absolute inset-x-0 bottom-2 z-40 flex flex-col items-center gap-2 px-3">
+      <div className="absolute inset-x-0 bottom-2 z-40 flex flex-col items-center gap-2 px-3 transition-all duration-500 ease-out">
         <PearlButton label="Start Journey" onClick={() => setShowTimeline((v) => !v)} className="w-full max-w-[340px] md:max-w-[560px] contrast-125" />
         <OrbInput onSend={handleSend} />
       </div>
