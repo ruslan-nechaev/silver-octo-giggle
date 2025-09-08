@@ -6,7 +6,7 @@ type OrbInputProps = {
   onSend?: (text: string) => void
 }
 
-export function OrbInput({ onSend }: OrbInputProps) {
+export const OrbInput = React.memo(function OrbInput({ onSend }: OrbInputProps) {
   const [value, setValue] = useState("")
   const [isFocused, setIsFocused] = useState(false)
   const [placeholderIndex, setPlaceholderIndex] = useState(0)
@@ -171,8 +171,8 @@ export function OrbInput({ onSend }: OrbInputProps) {
       </div>
     </form>
   )
-}
+})
 
-export default OrbInput
+export default React.memo(OrbInput)
 
 

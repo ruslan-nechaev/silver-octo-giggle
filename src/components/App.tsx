@@ -2,7 +2,7 @@
 // - Визуальный каркас для ауры, рамок, чата тренера и планов.
 // - Подключение shadcn/ui предполагается через будущую установку и стили.
 
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Component as SilkBackground } from '@/components/ui/silk-background-animation'
 import { LavaLamp } from '@/components/ui/fluid-blob'
 import { OrbInput } from '@/components/ui/animated-input'
@@ -17,7 +17,7 @@ import { motion } from 'framer-motion'
 
 export function App(): JSX.Element {
   const [showMain, setShowMain] = useState(false)
-  type ChatMessage = { role: 'user' | 'bot'; text: string; variant?: 'plain' | 'bubble' }
+  type ChatMessage = { id: string; role: 'user' | 'bot'; text: string; variant?: 'plain' | 'bubble' }
   const [messages, setMessages] = useState<ChatMessage[]>([])
   // Dynamic timeline data from routed plan
   const [planTimeline, setPlanTimeline] = useState<any[] | null>(null)
@@ -26,8 +26,11 @@ export function App(): JSX.Element {
   const WEBHOOK_URL = 'https://fit-ai-g.app.n8n.cloud/webhook-test/20123bc1-5e8c-429d-8790-f20e6138b0f3'
   const [showTimeline, setShowTimeline] = useState(false)
 
-  async function handleSend(text: string): Promise<void> {
-    setMessages((m) => [...m, { role: 'user', text, variant: 'bubble' }])
+  const createId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`
+
+  const handleSend = useCallback(async (text: string): Promise<void> => {
+    const userMsg: ChatMessage = { id: createId(), role: 'user', text, variant: 'bubble' }
+    setMessages((m) => [...m, userMsg])
     try {
       const params = new URLSearchParams({
         message: text,
@@ -52,7 +55,7 @@ export function App(): JSX.Element {
         setShowTimeline(true)
         // Используем встроенный React-таймлайн через состояние planTimeline
         // Also reflect in chat briefly
-        setMessages((m) => [...m, { role: 'bot', text: 'План получен. Отобразил упражнения на орбитах.', variant: 'bubble' }])
+        setMessages((m) => [...m, { id: createId(), role: 'bot', text: 'План получен. Отобразил упражнения на орбитах.', variant: 'bubble' }])
       } else if (routed.kind === 'text') {
         // Чистый текст без префиксов/сырого JSON
         const clean = (() => {
@@ -65,16 +68,16 @@ export function App(): JSX.Element {
           } catch {}
           return routed.text;
         })();
-        setMessages((m) => [...m, { role: 'bot', text: clean, variant: 'plain' }])
+        setMessages((m) => [...m, { id: createId(), role: 'bot', text: clean, variant: 'plain' }])
       } else {
-      setMessages((m) => [...m, { role: 'bot', text: payload || 'OK', variant: 'plain' }])
+      setMessages((m) => [...m, { id: createId(), role: 'bot', text: payload || 'OK', variant: 'plain' }])
       }
     } catch (err) {
       // swallow network errors to avoid disturbing UI
       console.warn('Webhook send failed', err)
-      setMessages((m) => [...m, { role: 'bot', text: 'Network error', variant: 'plain' }])
+      setMessages((m) => [...m, { id: createId(), role: 'bot', text: 'Network error', variant: 'plain' }])
     }
-  }
+  }, [])
 
   useEffect(() => {
     const t = setTimeout(() => setShowMain(true), 2000)
@@ -108,12 +111,11 @@ export function App(): JSX.Element {
         <div className="absolute right-2 top-1/2 -translate-y-1/2 h-[2px] rounded-full bg-white/90" style={{ left: 'calc(50% + 84px)' }} />
         <span className="silk-type text-[#FFD700] text-3xl md:text-4xl font-extrabold leading-none select-none z-10">999</span>
       </div>
-      {/* Временная навигация: при клике на кнопку показать экран таймлайна */}
-      {showTimeline && (
-        <div className="absolute inset-0 z-30 flex items-center justify-center">
-          <div className="w-full h-full md:scale-100 scale-[0.8] origin-center transition-transform duration-500 ease-out">
-            <RadialOrbitalTimeline
-              timelineData={
+      {/* Временная навигация: держим смонтированной, переключаем видимость CSS-классами */}
+      <div className={`absolute inset-0 z-30 flex items-center justify-center transition-all duration-500 ease-out ${showTimeline ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+        <div className="w-full h-full md:scale-100 scale-[0.8] origin-center transition-transform duration-500 ease-out">
+          <RadialOrbitalTimeline
+            timelineData={
                 planTimeline ?? [
                 { id:1,title:'Planning',date:'Jan 2024',content:'Project planning and requirements gathering phase.',category:'Planning',icon:Calendar,relatedIds:[2],status:'completed',energy:100},
                 { id:2,title:'Design',date:'Feb 2024',content:'UI/UX design and system architecture.',category:'Design',icon:FileText,relatedIds:[1,3],status:'completed',energy:90},
@@ -121,22 +123,20 @@ export function App(): JSX.Element {
                 { id:4,title:'Testing',date:'Apr 2024',content:'User testing and bug fixes.',category:'Testing',icon:User,relatedIds:[3,5],status:'pending',energy:30},
                 { id:5,title:'Release',date:'May 2024',content:'Final deployment and release.',category:'Release',icon:Clock,relatedIds:[4],status:'pending',energy:10},
                 ]
-              }
-            />
-          </div>
+            }
+          />
         </div>
-      )}
+      </div>
 
-      {/* Чат: отображение сообщений вебхука (скрываем, когда открыт таймлайна) */}
-      {!showTimeline && (
-      <div className="absolute z-20 inset-x-0 top-28 md:top-36 bottom-24 flex justify-center px-4">
+      {/* Чат: всегда смонтирован, переключаем видимость */}
+      <div className={`absolute z-20 inset-x-0 top-28 md:top-36 bottom-24 flex justify-center px-4 transition-opacity duration-300 ${showTimeline ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'}`}>
           <div className="w-full max-w-xl h-full relative">
             {/* Лента сообщений ниже, отступ сохранён под глобальную линию */}
             <div className="h-full overflow-y-auto no-scrollbar touch-pan-y space-y-4 pt-10">
-          {messages.map((msg, idx) => {
+          {messages.map((msg) => {
             const isPlain = msg.variant === 'plain' && msg.role === 'bot';
             return (
-              <div key={idx} className={`flex ${isPlain ? 'justify-start' : (msg.role === 'user' ? 'justify-end' : 'justify-start')}`}>
+              <div key={msg.id} className={`flex ${isPlain ? 'justify-start' : (msg.role === 'user' ? 'justify-end' : 'justify-start')}`}>
                 {isPlain ? (
                   <div className="max-w-[96%] md:max-w-[92%] mr-auto">
                     <div className="relative h-5 md:h-6 mb-2">
@@ -178,8 +178,7 @@ export function App(): JSX.Element {
         {/* Нижний градиент-затемнение, чтобы сообщения мягко уходили под панель */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 md:h-28 bg-gradient-to-b from-transparent to-black/90 z-10" />
       </div>
-        </div>
-      )}
+      </div>
 
       {/* Нижняя панель: всегда видна, при таймлайне чат скрыт */}
       <div className="absolute inset-x-0 bottom-2 z-40 flex flex-col items-center gap-2 px-3 transition-all duration-500 ease-out">
