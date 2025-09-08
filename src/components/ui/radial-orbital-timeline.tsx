@@ -68,6 +68,11 @@ export default function RadialOrbitalTimeline({ timelineData, onExpandedChange, 
   const animateToAngle = (targetAngle: number, durationMs: number = 500): Promise<void> => {
     return new Promise((resolve) => {
       if (alignRafRef.current) cancelAnimationFrame(alignRafRef.current);
+      const orbitEl = orbitRef.current;
+      if (!orbitEl) {
+        resolve();
+        return;
+      }
       const startAngle = normalizeAngle(angleRef.current);
       const endAngle = normalizeAngle(targetAngle);
       let delta = ((endAngle - startAngle + 540) % 360) - 180;
@@ -78,7 +83,8 @@ export default function RadialOrbitalTimeline({ timelineData, onExpandedChange, 
         const eased = easeInOutCubic(t);
         const current = normalizeAngle(startAngle + delta * eased);
         angleRef.current = current;
-        setRotationAngle(current);
+        // Apply transform directly to avoid React re-renders
+        orbitEl.style.transform = `translate(${centerOffset.x}px, ${centerOffset.y}px) rotate(${current}deg)`;
         if (t < 1) {
           alignRafRef.current = requestAnimationFrame(step);
         } else {
@@ -140,26 +146,26 @@ export default function RadialOrbitalTimeline({ timelineData, onExpandedChange, 
     setAutoRotate(true);
   }, [collapseAllSignal]);
 
+  // Use CSS animation for continuous rotation to avoid per-frame React state updates
   useEffect(() => {
-    const speedDegPerSec = 12;
-    const step = (ts: number) => {
-      if (!autoRotate) return;
-      if (!lastTsRef.current) lastTsRef.current = ts;
-      const dt = (ts - lastTsRef.current) / 1000;
-      lastTsRef.current = ts;
-      angleRef.current = (angleRef.current + speedDegPerSec * dt) % 360;
-      setRotationAngle(angleRef.current);
-      rafRef.current = requestAnimationFrame(step);
-    };
-    if (autoRotate) rafRef.current = requestAnimationFrame(step);
+    if (!orbitRef.current) return;
+    const el = orbitRef.current;
+    if (autoRotate) {
+      el.style.animation = `aura-rotate 20s linear infinite`;
+      el.style.transform = `translate(${centerOffset.x}px, ${centerOffset.y}px)`;
+    } else {
+      el.style.animation = "none";
+      el.style.transform = `translate(${centerOffset.x}px, ${centerOffset.y}px) rotate(${angleRef.current}deg)`;
+    }
     return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      lastTsRef.current = 0;
+      if (el) {
+        el.style.animation = "none";
+      }
     };
-  }, [autoRotate]);
+  }, [autoRotate, centerOffset.x, centerOffset.y]);
 
   const calculateNodePosition = (index: number, total: number) => {
-    const angle = ((index / total) * 360 + rotationAngle) % 360;
+    const angle = ((index / total) * 360) % 360; // base angle; container rotates via CSS
     const rad = (angle * Math.PI) / 180;
     const x = ORBIT_RADIUS * Math.cos(rad);
     const y = ORBIT_RADIUS * Math.sin(rad);
@@ -179,6 +185,7 @@ export default function RadialOrbitalTimeline({ timelineData, onExpandedChange, 
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center overflow-visible" ref={containerRef} onClick={handleContainerClick}>
+      <style>{`@keyframes aura-rotate { from { transform: translate(${centerOffset.x}px, ${centerOffset.y}px) rotate(0deg) } to { transform: translate(${centerOffset.x}px, ${centerOffset.y}px) rotate(360deg) } }`}</style>
       <div className="relative w-full max-w-4xl h-full flex items-center justify-center">
         <div className="absolute w-full h-full flex items-center justify-center" ref={orbitRef} style={{ perspective: "1000px", transform: `translate(${centerOffset.x}px, ${centerOffset.y}px)` }}>
           {/* Center orb with waves */}

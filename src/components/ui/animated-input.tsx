@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useMemo, useRef, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 type OrbInputProps = {
   onSend?: (text: string) => void
@@ -14,13 +14,13 @@ export function OrbInput({ onSend }: OrbInputProps) {
   const [isTyping, setIsTyping] = useState(true)
   const [isOrbRight, setIsOrbRight] = useState(true)
 
-  const handleSend = (e?: React.FormEvent) => {
+  const handleSend = useCallback((e?: React.FormEvent) => {
     if (e) e.preventDefault()
     const trimmed = value.trim()
     if (!trimmed) return
     if (onSend) onSend(trimmed)
     setValue("")
-  }
+  }, [onSend, value])
 
   // Keep the placeholders stable across renders
   const placeholders = useMemo(
@@ -68,6 +68,7 @@ export function OrbInput({ onSend }: OrbInputProps) {
     let charIndex = 0
 
     // type character-by-character using a derived slice to avoid any chance of appending undefined
+    // Throttle typing animation to avoid jank on input
     intervalRef.current = window.setInterval(() => {
       if (charIndex < chars.length) {
         const next = chars.slice(0, charIndex + 1).join("")

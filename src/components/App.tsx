@@ -85,7 +85,7 @@ export function App(): JSX.Element {
 
   return (
     <div className="h-screen w-screen relative overflow-hidden bg-black rounded-none border-0 outline-none">
-      <SilkBackground showCopy={false} />
+      {/* Background animation disabled on main screen to improve interactivity performance */}
       {/* Награда: чуть ниже верхнего края, чтобы не вылезала за рамку */}
       <div className="absolute inset-x-0 top-[5px] md:top-[8px] z-20 flex justify-center">
         <div className="relative w-[700px] h-[96px] md:w-[900px] md:h-[104px] overflow-visible">
