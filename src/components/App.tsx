@@ -7,6 +7,7 @@ import { Component as SilkBackground } from '@/components/ui/silk-background-ani
 import { LavaLamp } from '@/components/ui/fluid-blob'
 import { OrbInput } from '@/components/ui/animated-input'
 import { PearlButton } from '@/components/ui/pearl-button'
+import { RainbowBorderButton } from '@/components/ui/rainbow-borders-button'
 import RadialOrbitalTimeline from '@/components/ui/radial-orbital-timeline'
 import { Calendar, FileText, Code, User, Clock } from 'lucide-react'
 import WeatherButton from '@/components/ui/button'
@@ -28,7 +29,7 @@ export function App(): JSX.Element {
 
   const GREETING_TEXT = useMemo(
     () => (
-      'Привет! 👋\n\nТы получил персонального AI-тренера, который:\n* Всегда онлайн 🔍\n* Готов помочь 💪\n* Фокус на тебе 🎯'
+      'Привет! 👋\n\nТы получил персонального AI-тренера, который:\n• Всегда онлайн 🔍\n• Готов помочь 💪\n• Фокус на тебе 🎯'
     ),
     []
   )
@@ -197,8 +198,13 @@ export function App(): JSX.Element {
       </div>
       </div>
 
-      {/* Нижняя панель: всегда видна, при таймлайне чат скрыт */}
-      <div className="absolute inset-x-0 bottom-2 z-40 flex flex-col items-center gap-2 px-3 transition-all duration-500 ease-out">
+      {/* Нижняя панель: кнопки и инпут */}
+      <div className="absolute inset-x-0 bottom-2 z-40 flex flex-col items-center gap-3 px-3 transition-all duration-500 ease-out">
+        <div className="w-full max-w-[340px] md:max-w-[560px] grid grid-cols-3 gap-2">
+          <RainbowBorderButton label="Первый" />
+          <RainbowBorderButton label="Техника" />
+          <RainbowBorderButton label="План" />
+        </div>
         <PearlButton label="Start Journey" onClick={() => setShowTimeline((v) => !v)} className="w-full max-w-[340px] md:max-w-[560px] contrast-125" />
         <OrbInput onSend={handleSend} />
       </div>
