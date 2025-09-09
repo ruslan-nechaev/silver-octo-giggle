@@ -169,6 +169,13 @@ export function App(): JSX.Element {
                       layout="block"
                       className="silk-type text-[17px] md:text-[18px] leading-snug tracking-[0.01em] text-white"
                     />
+                    {msg.text === GREETING_TEXT && (
+                      <div className="mt-3 grid grid-cols-3 gap-2">
+                        <RainbowBorderButton label="Вопрос" />
+                        <RainbowBorderButton label="Техника" />
+                        <RainbowBorderButton label="План" />
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <motion.div
