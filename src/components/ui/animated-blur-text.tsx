@@ -147,7 +147,7 @@ const BlurText: React.FC<BlurTextProps> = ({
                 index === elements.length - 1 ? onAnimationComplete : undefined
               }
               style={{
-                display: "inline-block",
+                display: layout === "block" ? "inline" : "inline-block",
                 willChange: "transform, filter, opacity",
               }}
             >
