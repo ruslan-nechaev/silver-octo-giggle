@@ -26,6 +26,13 @@ export function App(): JSX.Element {
   const WEBHOOK_URL = 'https://fit-ai-g.app.n8n.cloud/webhook-test/20123bc1-5e8c-429d-8790-f20e6138b0f3'
   const [showTimeline, setShowTimeline] = useState(false)
 
+  const GREETING_TEXT = useMemo(
+    () => (
+      'Привет! 👋\n\nТы получил персонального AI-тренера, который:\n* Всегда онлайн 🔍\n* Готов помочь 💪\n* Фокус на тебе 🎯'
+    ),
+    []
+  )
+
   const createId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`
 
   const handleSend = useCallback(async (text: string): Promise<void> => {
@@ -83,6 +90,14 @@ export function App(): JSX.Element {
     const t = setTimeout(() => setShowMain(true), 2000)
     return () => clearTimeout(t)
   }, [])
+
+  // Show animated greeting once main screen is visible
+  useEffect(() => {
+    if (!showMain) return
+    setMessages((prev) => (prev.length === 0
+      ? [...prev, { id: createId(), role: 'bot', text: GREETING_TEXT, variant: 'plain' }]
+      : prev))
+  }, [showMain, GREETING_TEXT])
 
   if (!showMain) return <SilkBackground showCopy />
 
