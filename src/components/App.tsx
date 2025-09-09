@@ -165,6 +165,7 @@ export function App(): JSX.Element {
                       delay={60}
                       animateBy="words"
                       direction="top"
+                      layout="block"
                       className="silk-type text-[17px] md:text-[18px] leading-snug tracking-[0.01em] text-white"
                     />
                   </div>
@@ -182,6 +183,7 @@ export function App(): JSX.Element {
                       delay={60}
                       animateBy="words"
                       direction="top"
+                      layout="block"
                       className={`silk-type text-[17px] md:text-[18px] leading-snug tracking-[0.01em] ${msg.role === 'user' ? 'text-black' : 'text-white'} m-0`}
                     />
                   </motion.div>

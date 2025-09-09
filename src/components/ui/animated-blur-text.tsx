@@ -16,6 +16,7 @@ type BlurTextProps = {
   onAnimationComplete?: () => void;
   stepDuration?: number;
   triggerOnMount?: boolean;
+  layout?: "flex" | "block"; // flex: old behavior; block: preserve line breaks
 };
 
 const buildKeyframes = (
@@ -47,6 +48,7 @@ const BlurText: React.FC<BlurTextProps> = ({
   easing = (t) => t,
   onAnimationComplete,
   stepDuration = 0.35,
+  layout = "flex",
 }) => {
   // Normalize leading whitespace to avoid odd left indents at line start
   const normalizedText = (text ?? "").replace(/^\s+/, "");
@@ -106,7 +108,14 @@ const BlurText: React.FC<BlurTextProps> = ({
   );
 
   return (
-    <p ref={ref} className={cn("blur-text m-0 flex flex-wrap", className)}>
+    <p
+      ref={ref}
+      className={cn(
+        "blur-text m-0",
+        layout === "flex" ? "flex flex-wrap" : "block whitespace-pre-wrap",
+        className
+      )}
+    >
       {(() => {
         let animatedIndex = 0; // count only animated tokens for delay
         return elements.map((segment, index) => {
