@@ -121,8 +121,8 @@ const BlurText: React.FC<BlurTextProps> = ({
         return elements.map((segment, index) => {
           const isWhitespace = /^\s+$/.test(segment);
           if (isWhitespace) {
-            // Preserve whitespace/newlines; do not animate; convert spaces to nbsp to avoid collapse
-            const content = segment.replace(/ /g, "\u00A0");
+            // Preserve whitespace/newlines; in block layout allow normal spaces for proper wrapping
+            const content = layout === "block" ? segment : segment.replace(/ /g, "\u00A0");
             return (
               <span key={`ws-${index}`} style={{ whiteSpace: 'pre-wrap' }}>{content}</span>
             );

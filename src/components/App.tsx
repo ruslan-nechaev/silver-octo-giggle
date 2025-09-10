@@ -176,7 +176,7 @@ export function App(): JSX.Element {
                       animateBy="words"
                       direction="top"
                       layout="block"
-                      className="silk-type text-[17px] md:text-[18px] leading-snug tracking-[0.01em] text-white break-keep"
+                      className="silk-type text-[17px] md:text-[18px] leading-snug tracking-[0.01em] text-white whitespace-pre-wrap break-words"
                     />
                     {msg.text === GREETING_TEXT && (
                       <div className="mt-3 grid grid-cols-3 gap-2">
@@ -188,7 +188,7 @@ export function App(): JSX.Element {
                   </div>
                 ) : (
                   <motion.div
-                    className={`${msg.role === 'user' ? 'bg-white text-black rounded-2xl rounded-br-none max-w-[52%] md:max-w-[48%] px-3 py-2' : 'bg-white/10 text-white rounded-3xl max-w-[85%] px-4 py-2'} shadow-lg backdrop-blur-sm break-keep whitespace-pre-wrap`}
+                    className={`${msg.role === 'user' ? 'bg-white text-black rounded-2xl rounded-br-none max-w-[52%] md:max-w-[48%] px-3 py-2' : 'bg-white/10 text-white rounded-3xl max-w-[85%] px-4 py-2'} shadow-lg backdrop-blur-sm whitespace-pre-wrap break-words`}
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     transition={{ type: 'spring', stiffness: 260, damping: 30 }}
