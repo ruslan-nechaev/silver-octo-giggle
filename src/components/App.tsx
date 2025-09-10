@@ -2,7 +2,7 @@
 // - Визуальный каркас для ауры, рамок, чата тренера и планов.
 // - Подключение shadcn/ui предполагается через будущую установку и стили.
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Component as SilkBackground } from '@/components/ui/silk-background-animation'
 import { LavaLamp } from '@/components/ui/fluid-blob'
 import { OrbInput } from '@/components/ui/animated-input'
@@ -19,6 +19,7 @@ export function App(): JSX.Element {
   const [showMain, setShowMain] = useState(false)
   type ChatMessage = { id: string; role: 'user' | 'bot'; text: string; variant?: 'plain' | 'bubble' }
   const [messages, setMessages] = useState<ChatMessage[]>([])
+  const listRef = useRef<HTMLDivElement>(null)
   // Dynamic timeline data from routed plan
   const [planTimeline, setPlanTimeline] = useState<any[] | null>(null)
 
@@ -32,6 +33,9 @@ export function App(): JSX.Element {
     ),
     []
   )
+  const TPL_QUESTION = 'Задавайте ваш вопрос — я готов помочь!'
+  const TPL_TECHNIQUE = 'Пожалуйста, уточни, по какой именно технике тебя интересуют вопросы: техника выполнения какого упражнения или общий принцип тренировок?'
+  const TPL_PLAN = 'Хочешь упор на силу, скорость, выносливость, гибкость или комплексный подход? Выбери вектор тренировок!'
 
   const createId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`
 
@@ -85,6 +89,12 @@ export function App(): JSX.Element {
       setMessages((m) => [...m, { id: createId(), role: 'bot', text: 'Network error', variant: 'plain' }])
     }
   }, [])
+
+  // Auto-scroll to bottom on new messages
+  useEffect(() => {
+    if (!listRef.current) return
+    listRef.current.scrollTo({ top: listRef.current.scrollHeight, behavior: 'smooth' })
+  }, [messages.length])
 
   useEffect(() => {
     const t = setTimeout(() => setShowMain(true), 2000)
@@ -147,7 +157,7 @@ export function App(): JSX.Element {
       <div className={`absolute z-20 inset-x-0 top-28 md:top-36 bottom-24 flex justify-center px-4 transition-opacity duration-300 ${showTimeline ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'}`}>
           <div className="w-full max-w-xl h-full relative">
             {/* Лента сообщений ниже, отступ сохранён под глобальную линию */}
-            <div className="h-full overflow-y-auto no-scrollbar touch-pan-y space-y-4 pt-10">
+            <div ref={listRef} className="h-full overflow-y-auto no-scrollbar touch-pan-y space-y-4 pt-10 overscroll-contain" style={{ WebkitOverflowScrolling: 'touch' as any }}>
           {messages.map((msg) => {
             const isPlain = msg.variant === 'plain' && msg.role === 'bot';
             return (
@@ -166,19 +176,19 @@ export function App(): JSX.Element {
                       animateBy="words"
                       direction="top"
                       layout="block"
-                      className="silk-type text-[17px] md:text-[18px] leading-snug tracking-[0.01em] text-white"
+                      className="silk-type text-[17px] md:text-[18px] leading-snug tracking-[0.01em] text-white break-words"
                     />
                     {msg.text === GREETING_TEXT && (
                       <div className="mt-3 grid grid-cols-3 gap-2">
-                        <button className="h-10 rounded-xl border border-white/30 bg-black/40 text-white text-[14px] font-semibold">Вопрос</button>
-                        <button className="h-10 rounded-xl border border-white/30 bg-black/40 text-white text-[14px] font-semibold">Техника</button>
-                        <button className="h-10 rounded-xl border border-white/30 bg-black/40 text-white text-[14px] font-semibold">План</button>
+                        <button onClick={() => setMessages((m) => [...m, { id: createId(), role: 'bot', text: TPL_QUESTION, variant: 'plain' }])} className="h-10 rounded-xl border border-white/30 bg-black/40 text-white text-[14px] font-semibold">Вопрос</button>
+                        <button onClick={() => setMessages((m) => [...m, { id: createId(), role: 'bot', text: TPL_TECHNIQUE, variant: 'plain' }])} className="h-10 rounded-xl border border-white/30 bg-black/40 text-white text-[14px] font-semibold">Техника</button>
+                        <button onClick={() => setMessages((m) => [...m, { id: createId(), role: 'bot', text: TPL_PLAN, variant: 'plain' }])} className="h-10 rounded-xl border border-white/30 bg-black/40 text-white text-[14px] font-semibold">План</button>
                       </div>
                     )}
                   </div>
                 ) : (
                   <motion.div
-                    className={`${msg.role === 'user' ? 'bg-white text-black rounded-2xl rounded-br-none max-w-[52%] md:max-w-[48%] px-3 py-2' : 'bg-white/10 text-white rounded-3xl max-w-[85%] px-4 py-2'} shadow-lg backdrop-blur-sm`}
+                    className={`${msg.role === 'user' ? 'bg-white text-black rounded-2xl rounded-br-none max-w-[52%] md:max-w-[48%] px-3 py-2' : 'bg-white/10 text-white rounded-3xl max-w-[85%] px-4 py-2'} shadow-lg backdrop-blur-sm break-words whitespace-pre-wrap`}
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     transition={{ type: 'spring', stiffness: 260, damping: 30 }}
