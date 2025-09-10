@@ -7,7 +7,6 @@ import { Component as SilkBackground } from '@/components/ui/silk-background-ani
 import { LavaLamp } from '@/components/ui/fluid-blob'
 import { OrbInput } from '@/components/ui/animated-input'
 import { PearlButton } from '@/components/ui/pearl-button'
-import { RainbowBorderButton } from '@/components/ui/rainbow-borders-button'
 import RadialOrbitalTimeline from '@/components/ui/radial-orbital-timeline'
 import { Calendar, FileText, Code, User, Clock } from 'lucide-react'
 import WeatherButton from '@/components/ui/button'
@@ -171,9 +170,9 @@ export function App(): JSX.Element {
                     />
                     {msg.text === GREETING_TEXT && (
                       <div className="mt-3 grid grid-cols-3 gap-2">
-                        <RainbowBorderButton label="Вопрос" />
-                        <RainbowBorderButton label="Техника" />
-                        <RainbowBorderButton label="План" />
+                        <button className="h-10 rounded-xl border border-white/30 bg-black/40 text-white text-[14px] font-semibold">Вопрос</button>
+                        <button className="h-10 rounded-xl border border-white/30 bg-black/40 text-white text-[14px] font-semibold">Техника</button>
+                        <button className="h-10 rounded-xl border border-white/30 bg-black/40 text-white text-[14px] font-semibold">План</button>
                       </div>
                     )}
                   </div>
@@ -205,13 +204,8 @@ export function App(): JSX.Element {
       </div>
       </div>
 
-      {/* Нижняя панель: кнопки и инпут */}
+      {/* Нижняя панель: только управление и инпут (без дублей кнопок) */}
       <div className="absolute inset-x-0 bottom-2 z-40 flex flex-col items-center gap-3 px-3 transition-all duration-500 ease-out">
-        <div className="w-full max-w-[340px] md:max-w-[560px] grid grid-cols-3 gap-2">
-          <RainbowBorderButton label="Первый" />
-          <RainbowBorderButton label="Техника" />
-          <RainbowBorderButton label="План" />
-        </div>
         <PearlButton label="Start Journey" onClick={() => setShowTimeline((v) => !v)} className="w-full max-w-[340px] md:max-w-[560px] contrast-125" />
         <OrbInput onSend={handleSend} />
       </div>
