@@ -174,10 +174,10 @@ export function App(): JSX.Element {
       </div>
 
       {/* Чат: всегда смонтирован, переключаем видимость */}
-      <div className={`absolute z-20 inset-x-0 top-28 md:top-36 bottom-[176px] md:bottom-[208px] flex justify-center px-4 transition-opacity duration-300 ${showTimeline ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'}`}>
+      <div className={`absolute z-20 inset-x-0 top-28 md:top-36 bottom-[240px] md:bottom-[280px] flex justify-center px-4 transition-opacity duration-300 ${showTimeline ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'}`}>
           <div className="w-full max-w-xl h-full relative">
             {/* Лента сообщений ниже, отступ сохранён под глобальную линию */}
-            <div ref={listRef} className="h-full overflow-y-auto no-scrollbar touch-pan-y space-y-4 pt-10 overscroll-contain" style={{ WebkitOverflowScrolling: 'touch' as any }}>
+            <div ref={listRef} className="h-full overflow-y-auto no-scrollbar touch-pan-y space-y-4 pt-10 pb-6 md:pb-8 overscroll-contain" style={{ WebkitOverflowScrolling: 'touch' as any }}>
           {messages.map((msg) => {
             const isPlain = msg.variant === 'plain' && msg.role === 'bot';
             return (
