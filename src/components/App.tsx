@@ -24,7 +24,7 @@ export function App(): JSX.Element {
   const [planTimeline, setPlanTimeline] = useState<any[] | null>(null)
 
   // Webhook for outbound user messages
-  const WEBHOOK_URL = 'https://fit-ai-g.app.n8n.cloud/webhook-test/20123bc1-5e8c-429d-8790-f20e6138b0f3'
+  const WEBHOOK_URL = 'https://fit-ai-fg.app.n8n.cloud/webhook-test/20123bc1-5e8c-429d-8790-f20e6138b0f3'
   const [showTimeline, setShowTimeline] = useState(false)
 
   const GREETING_TEXT = useMemo(
@@ -49,8 +49,28 @@ export function App(): JSX.Element {
         origin: 'AuraProject',
         path: typeof window !== 'undefined' ? window.location.pathname : ''
       })
-      const url = `${WEBHOOK_URL}?${params.toString()}`
-      const res = await fetch(url, { method: 'GET', mode: 'cors' })
+      // Try primary webhook; on failure try production variant
+      const candidates: string[] = [
+        `${WEBHOOK_URL}?${params.toString()}`,
+        `${WEBHOOK_URL.replace('/webhook-test/', '/webhook/')}?${params.toString()}`,
+      ]
+
+      let res: Response | null = null
+      let lastError: unknown = null
+      for (const candidate of candidates) {
+        try {
+          const r = await fetch(candidate, { method: 'GET', mode: 'cors' })
+          if (r.ok) {
+            res = r
+            break
+          }
+          // Non-OK response, try next
+          lastError = new Error(`HTTP ${r.status}`)
+        } catch (err) {
+          lastError = err
+        }
+      }
+      if (!res) throw lastError ?? new Error('Webhook unreachable')
       let payload = ''
       try {
         const json = await res.clone().json()
@@ -154,7 +174,7 @@ export function App(): JSX.Element {
       </div>
 
       {/* Чат: всегда смонтирован, переключаем видимость */}
-      <div className={`absolute z-20 inset-x-0 top-28 md:top-36 bottom-24 flex justify-center px-4 transition-opacity duration-300 ${showTimeline ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'}`}>
+      <div className={`absolute z-20 inset-x-0 top-28 md:top-36 bottom-[176px] md:bottom-[208px] flex justify-center px-4 transition-opacity duration-300 ${showTimeline ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'}`}>
           <div className="w-full max-w-xl h-full relative">
             {/* Лента сообщений ниже, отступ сохранён под глобальную линию */}
             <div ref={listRef} className="h-full overflow-y-auto no-scrollbar touch-pan-y space-y-4 pt-10 overscroll-contain" style={{ WebkitOverflowScrolling: 'touch' as any }}>
