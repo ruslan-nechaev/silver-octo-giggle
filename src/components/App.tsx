@@ -236,7 +236,27 @@ export function App(): JSX.Element {
 
       {/* Нижняя панель: только управление и инпут (без дублей кнопок) */}
       <div className="absolute inset-x-0 bottom-2 z-40 flex flex-col items-center gap-3 px-3 transition-all duration-500 ease-out">
-        <PearlButton label="Start Journey" onClick={() => setShowTimeline((v) => !v)} className="w-full max-w-[340px] md:max-w-[560px] contrast-125" />
+        <PearlButton
+          label="План"
+          onClick={() => {
+            const hasPlan = Array.isArray(planTimeline) && planTimeline.length > 0;
+            if (!hasPlan) {
+              setShowTimeline(false);
+              setMessages((m) => [
+                ...m,
+                {
+                  id: createId(),
+                  role: 'bot',
+                  text: 'Отлично, давай создадим для тебя план на день, чтобы ты хотел потренировать?',
+                  variant: 'plain',
+                },
+              ]);
+              return;
+            }
+            setShowTimeline((v) => !v);
+          }}
+          className="w-full max-w-[340px] md:max-w-[560px] contrast-125"
+        />
         <OrbInput onSend={handleSend} />
       </div>
     </div>
