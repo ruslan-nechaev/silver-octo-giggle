@@ -229,8 +229,7 @@ export function App(): JSX.Element {
             )
           })}
         </div>
-        {/* Нижний градиент-затемнение, чтобы сообщения мягко уходили под панель */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 md:h-28 bg-gradient-to-b from-transparent to-black/90 z-10" />
+        {/* Убран нижний градиент, чтобы не было "края" у текста */}
       </div>
       </div>
 
