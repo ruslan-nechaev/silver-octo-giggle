@@ -13,6 +13,7 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
   const [boxHeight, setBoxHeight] = useState<number>(44)
   const [maxH, setMaxH] = useState<number>(120)
   const [fontPx, setFontPx] = useState<number>(15)
+  const baselineRef = useRef<number>(44)
 
   const handleAutoResize = useCallback(() => {
     const el = textareaRef.current
@@ -20,10 +21,17 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
     el.style.height = "auto"
     const min = 44
     const max = maxH
+    // compute single-line baseline height if unknown
+    const cs = window.getComputedStyle(el)
+    const lh = parseFloat(cs.lineHeight || "24") || 24
+    const pt = parseFloat(cs.paddingTop || "10") || 10
+    const pb = parseFloat(cs.paddingBottom || "10") || 10
+    const baseline = Math.max(44, lh + pt + pb)
+    baselineRef.current = baseline
     let next = Math.min(max, Math.max(min, el.scrollHeight))
-    // Keep initial height strictly at min when there is no user text
-    if (value.trim().length === 0) {
-      next = min
+    // Rule: do not expand until content exceeds baseline (fits в одну строку)
+    if (value.trim().length === 0 || el.scrollHeight <= baseline + 1) {
+      next = Math.max(min, baseline)
     }
     el.style.height = `${next}px`
     el.style.overflowY = el.scrollHeight > max ? "auto" : "hidden"
