@@ -141,7 +141,7 @@ export function App(): JSX.Element {
           <TextGlow
             text="Aura"
             backgroundColor="transparent"
-            font={{ fontFamily: 'UnifrakturMaguntia, system-ui', fontSize: 60, fontWeight: 600 }}
+            font={{ fontFamily: 'system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif', fontSize: 60, fontWeight: 800 }}
             shadowColor="#FFFFFF"
             useGradientGlow={false}
             animateGlow={false}
