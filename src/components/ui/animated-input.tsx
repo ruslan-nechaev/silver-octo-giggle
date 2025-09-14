@@ -29,12 +29,13 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
     const baseline = Math.max(44, lh + pt + pb)
     baselineRef.current = baseline
     const measured = el.scrollHeight
-    let next = Math.min(max, Math.max(min, measured))
-    // Начало второй строки фиксируем мягче: рост разрешаем, когда контент
-    // превышает baseline примерно на 60% высоты строки (или больше)
-    const startedSecondLine = measured >= baseline + lh * 0.6
-    if (value.trim().length === 0 || !startedSecondLine) {
-      next = Math.max(min, baseline)
+    // Вычисляем реальное число строк текста (без паддингов)
+    const contentHeight = Math.max(0, measured - pt - pb)
+    const lines = Math.ceil((contentHeight + 0.5) / lh)
+    let next = Math.max(min, baseline)
+    if (value.trim().length > 0 && lines >= 2) {
+      const target = baseline + (lines - 1) * lh
+      next = Math.min(max, target)
     }
     el.style.height = `${next}px`
     el.style.overflowY = el.scrollHeight > max ? "auto" : "hidden"
