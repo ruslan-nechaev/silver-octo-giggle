@@ -30,10 +30,10 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
     baselineRef.current = baseline
     const measured = el.scrollHeight
     let next = Math.min(max, Math.max(min, measured))
-    // Rule: do not expand until content clearly exceeds the single-line baseline
-    // add tolerance to ignore tiny layout jitter on first character
-    const tolerance = 6
-    if (value.trim().length === 0 || measured <= baseline + tolerance) {
+    // Expand only when контент реально начал вторую строку:
+    // требуем превышение на ~высоту строки (минус небольшой допуск)
+    const threshold = baseline + Math.max(10, lh - 2)
+    if (value.trim().length === 0 || measured < threshold) {
       next = Math.max(min, baseline)
     }
     el.style.height = `${next}px`
