@@ -10,6 +10,7 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
   const [value, setValue] = useState("")
   const [isFocused, setIsFocused] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
+  const [boxHeight, setBoxHeight] = useState<number>(44)
 
   const handleAutoResize = useCallback(() => {
     const el = textareaRef.current
@@ -20,6 +21,7 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
     const next = Math.min(max, Math.max(min, el.scrollHeight))
     el.style.height = `${next}px`
     el.style.overflowY = el.scrollHeight > max ? "auto" : "hidden"
+    setBoxHeight(next)
   }, [])
 
   useEffect(() => {
@@ -69,7 +71,8 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
         className="relative w-full rounded-[24px] bg-[#2E2E2E] px-0 py-0"
         style={{
           minHeight: 44,
-          height: 44,
+          height: boxHeight,
+          transition: 'height 150ms ease',
         }}
       >
         {/* Right send button: 36x36 circle, 12px from right, 4px top/bottom */}

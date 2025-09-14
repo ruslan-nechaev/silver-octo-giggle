@@ -234,7 +234,7 @@ export function App(): JSX.Element {
       </div>
 
       {/* Нижняя панель: только управление и инпут (без дублей кнопок) */}
-      <div className="absolute inset-x-0 bottom-2 z-40 flex flex-col items-center gap-3 px-3 transition-all duration-500 ease-out">
+      <div className="absolute inset-x-0 bottom-2 z-40 flex flex-col items-center gap-3 px-4 transition-all duration-500 ease-out" style={{ paddingLeft: 16, paddingRight: 16, bottom: 8 }}>
         <PearlButton
           label="План"
           onClick={() => {
@@ -256,7 +256,9 @@ export function App(): JSX.Element {
           }}
           className="w-full max-w-[340px] md:max-w-[560px] contrast-125"
         />
-        <OrbInput onSend={handleSend} />
+        <div className="w-full max-w-[680px] mx-auto" style={{ paddingLeft: 16, paddingRight: 16 }}>
+          <OrbInput onSend={handleSend} />
+        </div>
       </div>
     </div>
   )
