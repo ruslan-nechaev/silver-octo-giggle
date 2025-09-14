@@ -72,14 +72,19 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
           height: 44,
         }}
       >
-        {/* Right icon (send) shown only when there is text */}
-        {hasText && (
-          <button type="submit" aria-label="Send" className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 text-white/90">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M3 11L21 3L13 21L11 13L3 11Z" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-        )}
+        {/* Right send button: 36x36 circle, 12px from right, fades in when text present */}
+        <button
+          type="submit"
+          aria-label="Send"
+          aria-disabled={!hasText}
+          className={`absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white flex items-center justify-center transition-opacity duration-200 active:scale-95 ${
+            hasText ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+          }`}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-black">
+            <path d="M3 11L21 3L13 21L11 13L3 11Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
 
         {/* Text area */}
         <textarea
@@ -90,7 +95,7 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
             onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
             spellCheck={false}
-          className={`coach-text block w-full resize-none bg-transparent text-white placeholder-[#A0A0A0] outline-none border-none text-[15px] leading-[1.6] pl-4 ${hasText ? 'pr-[52px]' : 'pr-4'}`}
+          className={`coach-text block w-full resize-none bg-transparent text-white placeholder-[#A0A0A0] outline-none border-none text-[15px] leading-[1.6] pl-4 ${hasText ? 'pr-[60px]' : 'pr-4'}`}
           style={{ minHeight: 44, maxHeight: 120 }}
           aria-label="Input"
         />
