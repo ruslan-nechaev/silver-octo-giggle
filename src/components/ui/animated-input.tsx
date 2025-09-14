@@ -62,12 +62,12 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
       setMaxH(small ? 100 : 120)
       setFontPx(small ? 14 : 15)
       // re-evaluate height with new constraints
-      requestAnimationFrame(handleAutoResize)
+      if (hasInput) requestAnimationFrame(handleAutoResize)
     }
     applyResponsive()
     window.addEventListener('resize', applyResponsive)
     return () => window.removeEventListener('resize', applyResponsive)
-  }, [handleAutoResize])
+  }, [handleAutoResize, hasInput])
 
   const handleSend = useCallback((e?: React.FormEvent) => {
     if (e) e.preventDefault()
