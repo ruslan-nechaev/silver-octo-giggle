@@ -174,7 +174,7 @@ export function App(): JSX.Element {
       </div>
 
       {/* Чат: всегда смонтирован, переключаем видимость */}
-      <div className={`absolute z-20 inset-x-0 top-[144px] md:top-[160px] bottom-[160px] md:bottom-[176px] flex justify-center px-4 transition-opacity duration-300 ${showTimeline ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'}`}>
+      <div className={`absolute z-20 inset-x-0 top-[144px] md:top-[160px] bottom-[160px] md:bottom-[176px] flex justify-center px-0 transition-opacity duration-300 ${showTimeline ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'}`}>
           <div className="w-full h-full relative flex justify-center">
             {/* Лента сообщений ниже, отступ сохранён под глобальную линию */}
             <div
