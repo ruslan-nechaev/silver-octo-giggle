@@ -61,6 +61,7 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
       handleSend()
     }
   }
+  const hasText = value.trim().length > 0
 
   return (
     <form className="w-full" onSubmit={handleSend}>
@@ -71,13 +72,14 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
           height: 44,
         }}
       >
-
-        {/* Right icon (send) */}
-        <button type="submit" aria-label="Send" className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 text-white/90">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3 11L21 3L13 21L11 13L3 11Z" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
+        {/* Right icon (send) shown only when there is text */}
+        {hasText && (
+          <button type="submit" aria-label="Send" className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 text-white/90">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 11L21 3L13 21L11 13L3 11Z" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+        )}
 
         {/* Text area */}
         <textarea
@@ -88,14 +90,14 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
             onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
             spellCheck={false}
-          className="coach-text block w-full resize-none bg-transparent text-white placeholder-[#A0A0A0] outline-none border-none text-[15px] leading-[1.6] pr-[52px] pl-4"
+          className={`coach-text block w-full resize-none bg-transparent text-white placeholder-[#A0A0A0] outline-none border-none text-[15px] leading-[1.6] pl-4 ${hasText ? 'pr-[52px]' : 'pr-4'}`}
           style={{ minHeight: 44, maxHeight: 120 }}
           aria-label="Input"
         />
 
         {/* Custom placeholder centered vertically when empty */}
         {value.length === 0 && (
-          <div className="pointer-events-none absolute left-4 right-[52px] top-1/2 -translate-y-1/2 text-[15px] leading-[1.6] text-[#A0A0A0] coach-text whitespace-nowrap overflow-hidden text-ellipsis">
+          <div className="pointer-events-none absolute left-4 right-4 top-1/2 -translate-y-1/2 text-[15px] leading-[1.6] text-[#A0A0A0] coach-text whitespace-nowrap overflow-hidden text-ellipsis">
             {placeholders[placeholderIndex]}
           </div>
         )}
