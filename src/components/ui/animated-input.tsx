@@ -28,7 +28,9 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
     // Сначала фиксируем высоту в baseline, чтобы измерение было корректным
     el.style.height = `${BASELINE}px`
     const contentHeight = Math.max(0, el.scrollHeight - (PT + PB))
-    const lines = Math.max(1, Math.ceil(contentHeight / LINE))
+    // Строгая защита от ложного роста на первой букве: пока контент не превышает
+    // высоту одной строки заметно (> LINE + 4px), считаем, что строка одна
+    const lines = contentHeight > (LINE + 4) ? Math.max(2, Math.ceil(contentHeight / LINE)) : 1
     const extraLines = Math.max(0, lines - 1)
     const maxExtraLines = Math.max(0, Math.floor((max - BASELINE) / LINE))
     const visibleExtraLines = Math.min(extraLines, maxExtraLines)
