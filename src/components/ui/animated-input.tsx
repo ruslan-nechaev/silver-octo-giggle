@@ -77,11 +77,11 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
           type="submit"
           aria-label="Send"
           aria-disabled={!hasText}
-          className={`absolute right-3 top-[4px] bottom-[4px] my-auto w-[36px] h-[36px] rounded-full bg-white flex items-center justify-center transition-opacity duration-200 active:scale-95 ${
+          className={`absolute right-[12px] top-[4px] bottom-[4px] my-auto w-[36px] h-[36px] rounded-full bg-white flex items-center justify-center transition-opacity duration-200 active:scale-95 ${
             hasText ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
           }`}
         >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-black block">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-black block">
             <path d="M8 12.5V3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M4.5 7.5L8 4L11.5 7.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
