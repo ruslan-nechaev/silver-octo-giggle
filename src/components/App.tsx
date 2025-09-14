@@ -234,7 +234,7 @@ export function App(): JSX.Element {
       </div>
 
       {/* Нижняя панель: только управление и инпут (без дублей кнопок) */}
-      <div className="absolute inset-x-0 bottom-2 z-40 flex flex-col items-center gap-3 px-4 transition-all duration-500 ease-out" style={{ paddingLeft: 16, paddingRight: 16, bottom: 8 }}>
+      <div className="absolute inset-x-0 z-40 flex flex-col items-center gap-3 transition-all duration-500 ease-out" style={{ paddingLeft: 16, paddingRight: 16, bottom: 8, left: 0, right: 0, position: 'absolute' }}>
         <PearlButton
           label="План"
           onClick={() => {

@@ -117,14 +117,14 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
             onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
             spellCheck={false}
-          className={`coach-text block w-full resize-none bg-transparent text-white placeholder-[#A0A0A0] outline-none border-none leading-[1.6] pl-4 pr-[44px] py-[10px]`}
+          className={`coach-text block w-full resize-none bg-transparent text-white placeholder-[#A0A0A0] outline-none border-none leading-[1.6] pl-4 pr-[60px] py-[10px]`}
           style={{ minHeight: 44, maxHeight: maxH, fontSize: fontPx }}
           aria-label="Input"
         />
 
         {/* Custom placeholder centered vertically when empty */}
         {value.length === 0 && (
-          <div className="pointer-events-none absolute left-4 right-[44px] top-1/2 -translate-y-1/2 text-[15px] leading-[1.6] text-[#A0A0A0] coach-text whitespace-nowrap overflow-hidden text-ellipsis">
+          <div className="pointer-events-none absolute left-4 right-[60px] top-1/2 -translate-y-1/2 text-[15px] leading-[1.6] text-[#A0A0A0] coach-text whitespace-nowrap overflow-hidden text-ellipsis">
             {placeholders[placeholderIndex]}
           </div>
         )}
