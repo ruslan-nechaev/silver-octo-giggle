@@ -25,10 +25,11 @@ export const OrbInput = React.memo(function OrbInput({ onSend }: OrbInputProps) 
   // Keep the placeholders stable across renders
   const placeholders = useMemo(
     () => [
-      "Ask anything...",
-      "What's on your mind?",
-      "How can I help you?",
-      "What would you like to know?",
+      "Привет! Готов к тренировке? 💪",
+      "Создай свой фитнес-план ⭐️",
+      "Спроси про упражнение или технику",
+      "Время прокачки! ⚡️",
+      "Твой лучший результат — за ⭐️",
     ],
     []
   )
