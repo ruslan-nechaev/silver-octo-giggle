@@ -20,12 +20,16 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
     el.style.height = "auto"
     const min = 44
     const max = maxH
-    const next = Math.min(max, Math.max(min, el.scrollHeight))
+    let next = Math.min(max, Math.max(min, el.scrollHeight))
+    // Keep initial height strictly at min when there is no user text
+    if (value.trim().length === 0) {
+      next = min
+    }
     el.style.height = `${next}px`
     el.style.overflowY = el.scrollHeight > max ? "auto" : "hidden"
     setBoxHeight(next)
     el.scrollTop = el.scrollHeight
-  }, [])
+  }, [maxH, value])
 
   useEffect(() => {
     handleAutoResize()
