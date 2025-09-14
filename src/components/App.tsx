@@ -141,7 +141,7 @@ export function App(): JSX.Element {
           <TextGlow
             text="Aura"
             backgroundColor="transparent"
-            font={{ fontFamily: 'UnifrakturMaguntia, system-ui', fontSize: 60, fontWeight: 600 }}
+            font={{ fontFamily: 'system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif', fontSize: 60, fontWeight: 800 }}
             shadowColor="#FFFFFF"
             useGradientGlow={false}
             animateGlow={false}
@@ -174,29 +174,29 @@ export function App(): JSX.Element {
       </div>
 
       {/* Чат: всегда смонтирован, переключаем видимость */}
-      <div className={`absolute z-20 inset-x-0 top-28 md:top-36 bottom-[240px] md:bottom-[280px] flex justify-center px-4 transition-opacity duration-300 ${showTimeline ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'}`}>
-          <div className="w-full max-w-xl h-full relative">
+      <div className={`absolute z-20 inset-x-0 top-[144px] md:top-[160px] bottom-[160px] md:bottom-[176px] flex justify-center px-0 transition-opacity duration-300 ${showTimeline ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'}`}>
+          <div className="w-full h-full relative flex justify-center">
             {/* Лента сообщений ниже, отступ сохранён под глобальную линию */}
-            <div ref={listRef} className="h-full overflow-y-auto no-scrollbar touch-pan-y space-y-4 pt-10 pb-6 md:pb-8 overscroll-contain" style={{ WebkitOverflowScrolling: 'touch' as any }}>
+            <div
+              ref={listRef}
+              className={`h-full overflow-y-auto no-scrollbar touch-pan-y ${
+                (messages[0]?.text === GREETING_TEXT ? 'pt-0' : 'pt-10')
+              } pb-6 md:pb-8 overscroll-contain w-full max-w-[680px] mx-auto space-y-2 md:space-y-3`}
+              style={{ WebkitOverflowScrolling: 'touch' as any }}
+            >
           {messages.map((msg) => {
             const isPlain = msg.variant === 'plain' && msg.role === 'bot';
             return (
               <div key={msg.id} className={`flex ${isPlain ? 'justify-start' : (msg.role === 'user' ? 'justify-end' : 'justify-start')}`}>
                 {isPlain ? (
                   <div className="max-w-[96%] md:max-w-[92%] mr-auto">
-                    <div className="relative h-5 md:h-6 mb-2">
-                      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-px md:h-[2px] bg-white/30"></div>
-                      <span className="absolute left-1/2 -translate-x-1/2 px-1 text-[#FFD700] text-[12px] md:text-[13px] font-semibold leading-none tracking-wide">
-                        Fit Coach
-                      </span>
-                    </div>
                     <BlurText
                       text={msg.text}
                       delay={60}
                       animateBy="words"
                       direction="top"
                       layout="block"
-                      className="silk-type text-[17px] md:text-[18px] leading-snug tracking-[0.01em] text-white whitespace-pre-wrap break-words"
+                      className="coach-text text-[15px] leading-[24px] tracking-[0.01em] text-white whitespace-pre-wrap break-words py-3 px-4"
                     />
                     {msg.text === GREETING_TEXT && (
                       <div className="mt-3 grid grid-cols-3 gap-2">
@@ -208,7 +208,7 @@ export function App(): JSX.Element {
                   </div>
                 ) : (
                   <motion.div
-                    className={`${msg.role === 'user' ? 'bg-white text-black rounded-2xl rounded-br-none max-w-[52%] md:max-w-[48%] px-3 py-2' : 'bg-white/10 text-white rounded-3xl max-w-[85%] px-4 py-2'} shadow-lg backdrop-blur-sm whitespace-pre-wrap break-words`}
+                    className={`${msg.role === 'user' ? 'bg-white text-black rounded-2xl rounded-br-none max-w-[52%] md:max-w-[48%] px-4 py-3' : 'bg-white/10 text-white rounded-3xl max-w-[85%] px-4 py-3'} shadow-lg backdrop-blur-sm whitespace-pre-wrap break-words`}
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     transition={{ type: 'spring', stiffness: 260, damping: 30 }}
@@ -221,7 +221,7 @@ export function App(): JSX.Element {
                       animateBy="words"
                       direction="top"
                       layout="block"
-                      className={`silk-type text-[17px] md:text-[18px] leading-snug tracking-[0.01em] ${msg.role === 'user' ? 'text-black' : 'text-white'} m-0`}
+                      className={`coach-text text-[15px] leading-[24px] tracking-[0.01em] ${msg.role === 'user' ? 'text-black' : 'text-white'} m-0`}
                     />
                   </motion.div>
                 )}
