@@ -2,180 +2,91 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
-type OrbInputProps = {
+type ChatInputProps = {
   onSend?: (text: string) => void
 }
 
-export const OrbInput = React.memo(function OrbInput({ onSend }: OrbInputProps) {
+export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps) {
   const [value, setValue] = useState("")
   const [isFocused, setIsFocused] = useState(false)
-  const [placeholderIndex, setPlaceholderIndex] = useState(0)
-  const [displayedText, setDisplayedText] = useState("")
-  const [isTyping, setIsTyping] = useState(true)
-  const [isOrbRight, setIsOrbRight] = useState(true)
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null)
+
+  const handleAutoResize = useCallback(() => {
+    const el = textareaRef.current
+    if (!el) return
+    el.style.height = "auto"
+    const min = 44
+    const max = 120
+    const next = Math.min(max, Math.max(min, el.scrollHeight))
+    el.style.height = `${next}px`
+    el.style.overflowY = el.scrollHeight > max ? "auto" : "hidden"
+  }, [])
+
+  useEffect(() => {
+    handleAutoResize()
+  }, [value, handleAutoResize])
 
   const handleSend = useCallback((e?: React.FormEvent) => {
     if (e) e.preventDefault()
     const trimmed = value.trim()
     if (!trimmed) return
-    if (onSend) onSend(trimmed)
+    onSend?.(trimmed)
     setValue("")
-  }, [onSend, value])
+    requestAnimationFrame(handleAutoResize)
+  }, [onSend, value, handleAutoResize])
 
-  // Keep the placeholders stable across renders
-  const placeholders = useMemo(
-    () => [
-      "Привет! Готов к тренировке? 💪",
-      "Создай свой фитнес-план ⭐️",
-      "Задай вопрос о тренировке",
-      "Время прокачки! ⚡️",
-      "Твой лучший результат — за ⭐️",
-    ],
-    []
-  )
+  const placeholder = useMemo(() => "Спросите что-нибудь…", [])
 
-  // Config: tweak the animation to taste
-  const CHAR_DELAY = 75 // ms between characters while typing
-  const IDLE_DELAY_AFTER_FINISH = 2200 // ms to wait after a full sentence is shown
-
-  // Refs to hold active timers so they can be cleaned up
-  const intervalRef = useRef<any>(null)
-  const timeoutRef = useRef<any>(null)
-
-  useEffect(() => {
-    // clear any stale timers (helps with StrictMode double-invoke in dev)
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current)
-      intervalRef.current = null
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault()
+      handleSend()
     }
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current)
-      timeoutRef.current = null
-    }
-
-    // Pause placeholder animation while user is interacting/typing to prevent jank
-    if (isFocused || value.length > 0) {
-      setDisplayedText("")
-      setIsTyping(false)
-      return () => {}
-    }
-
-    const current = placeholders[placeholderIndex]
-    if (!current) {
-      setDisplayedText("")
-      setIsTyping(false)
-      return
-    }
-
-    const chars = Array.from(current)
-
-    // reset state for a new round
-    setDisplayedText("")
-    setIsTyping(true)
-
-    let charIndex = 0
-
-    // type character-by-character using a derived slice to avoid any chance of appending undefined
-    // Throttle typing animation to avoid jank on input
-    intervalRef.current = window.setInterval(() => {
-      if (charIndex < chars.length) {
-        const next = chars.slice(0, charIndex + 1).join("")
-        setDisplayedText(next)
-        charIndex += 1
-      } else {
-        if (intervalRef.current) {
-          clearInterval(intervalRef.current)
-          intervalRef.current = null
-        }
-        setIsTyping(false)
-
-        // after a brief pause, advance to the next placeholder
-        timeoutRef.current = window.setTimeout(() => {
-          setPlaceholderIndex((prev) => (prev + 1) % placeholders.length)
-        }, IDLE_DELAY_AFTER_FINISH)
-      }
-    }, CHAR_DELAY)
-
-    // Cleanup on unmount or when placeholderIndex changes
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current)
-        intervalRef.current = null
-      }
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current)
-        timeoutRef.current = null
-      }
-    }
-  }, [placeholderIndex, placeholders, isFocused, value])
-
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const next = e.target.value
-    setValue(next)
-  }, [])
+  }
 
   return (
-    <form className="relative w-full max-w-[340px] md:max-w-[560px]" onSubmit={handleSend}>
+    <form className="w-full" onSubmit={handleSend}>
       <div
-        className={`relative flex items-center px-3 md:px-4 py-[14px] md:py-[28px] bg-black shadow-lg transition-all duration-300 ease-out rounded-full border border-white/30 ${
-          isFocused ? "shadow-xl scale-[1.02] border-gray-400/70" : "shadow-lg"
-        }`}
+        className="relative w-full rounded-[24px] bg-[#2E2E2E] px-4 py-[10px]"
+        style={{
+          minHeight: 44,
+          height: 44,
+        }}
       >
-        {/* Moving orb */}
-        <button
-          type="submit"
-          aria-label="Animated orb"
-          className={`absolute z-20 top-1/2 -translate-y-1/2 transition-transform duration-500 ease-out transform-gpu ${
-            isOrbRight ? "right-3 md:right-5" : "left-3"
-          }`}
-          style={{ willChange: 'transform' }}
-        >
-          <div
-            className="w-9 h-9 md:w-12 md:h-12 rounded-full overflow-hidden transform-gpu flex items-center justify-center"
-            style={{ willChange: 'transform' }}
-          >
-            <img
-              src="https://media.giphy.com/media/26gsuUjoEBmLrNBxC/giphy.gif"
-              alt="Animated orb"
-              className="w-full h-full object-cover"
-              style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden', willChange: 'transform' }}
-            />
-          </div>
+        {/* Left icon (paperclip) */}
+        <div className="absolute left-3 top-1/2 -translate-y-1/2 w-6 h-6 text-white/80" aria-hidden>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8.5 12.5L15 6C16.657 4.343 19.343 4.343 21 6C22.657 7.657 22.657 10.343 21 12L12 21C9.239 23.761 4.761 23.761 2 21C-0.761 18.239 -0.761 13.761 2 11L11 2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </div>
+
+        {/* Right icon (send) */}
+        <button type="submit" aria-label="Send" className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 text-white/90">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 11L21 3L13 21L11 13L3 11Z" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
         </button>
 
-        {/* Separator line between text and orb */}
-        <div className="pointer-events-none absolute top-1/2 -translate-y-1/2 right-14 md:right-20 h-7 md:h-10 w-px bg-gray-600/60" />
+        {/* Text area */}
+        <textarea
+          ref={textareaRef}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onKeyDown={handleKeyDown}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          spellCheck={false}
+          className="coach-text block w-full resize-none bg-transparent text-white placeholder-[#A0A0A0] outline-none border-none text-[15px] leading-[1.6] pr-[52px] pl-[52px]"
+          style={{ minHeight: 44, maxHeight: 120 }}
+          aria-label="Input"
+        />
 
-        {/* Input with padding to avoid overlapping the orb */}
-        <div className="flex-1 min-w-[160px] md:w-[420px]">
-          <input
-            data-testid="orb-input"
-            type="text"
-            value={value}
-            onChange={handleChange}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => {
-              setIsFocused(false)
-            }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault()
-                handleSend()
-              }
-            }}
-            placeholder={`${displayedText}${isTyping ? "|" : ""}`}
-            aria-label="Ask a question"
-            autoComplete="off"
-            autoCorrect="off"
-            spellCheck={false}
-            inputMode="text"
-            enterKeyHint="send"
-            className={`w-full text-sm md:text-lg text-white placeholder-gray-400 bg-transparent border-none outline-none font-light [font-variant-ligatures:none] ${
-              isOrbRight ? "pl-4 pr-16 md:pl-6 md:pr-20" : "pl-16 pr-4 md:pl-20 md:pr-6"
-            }`}
-            style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden', WebkitFontSmoothing: 'antialiased' as any }}
-          />
-        </div>
+        {/* Custom placeholder centered vertically when empty */}
+        {value.length === 0 && (
+          <div className="pointer-events-none absolute left-[52px] right-[52px] top-1/2 -translate-y-1/2 text-[15px] leading-[1.6] text-[#A0A0A0] coach-text whitespace-nowrap overflow-hidden text-ellipsis">
+            {placeholder}
+          </div>
+        )}
       </div>
     </form>
   )
