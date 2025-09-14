@@ -29,11 +29,13 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
     const baseline = Math.max(44, lh + pt + pb)
     baselineRef.current = baseline
     const measured = el.scrollHeight
+    const client = el.clientHeight
     let next = Math.min(max, Math.max(min, measured))
-    // Expand only when контент реально начал вторую строку:
-    // требуем превышение на ~высоту строки (минус небольшой допуск)
-    const threshold = baseline + Math.max(10, lh - 2)
-    if (value.trim().length === 0 || measured < threshold) {
+    // Расширяем ТОЛЬКО если реально началась вторая строка:
+    // 1) высота контента превосходит baseline более чем на ~0.9*lineHeight
+    // 2) и scrollHeight заметно больше clientHeight (с запасом)
+    const startedSecondLine = measured - baseline > lh * 0.9 && measured > client + 2
+    if (value.trim().length === 0 || !startedSecondLine) {
       next = Math.max(min, baseline)
     }
     el.style.height = `${next}px`
