@@ -28,9 +28,12 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
     const pb = parseFloat(cs.paddingBottom || "10") || 10
     const baseline = Math.max(44, lh + pt + pb)
     baselineRef.current = baseline
-    let next = Math.min(max, Math.max(min, el.scrollHeight))
-    // Rule: do not expand until content exceeds baseline (fits в одну строку)
-    if (value.trim().length === 0 || el.scrollHeight <= baseline + 1) {
+    const measured = el.scrollHeight
+    let next = Math.min(max, Math.max(min, measured))
+    // Rule: do not expand until content clearly exceeds the single-line baseline
+    // add tolerance to ignore tiny layout jitter on first character
+    const tolerance = 6
+    if (value.trim().length === 0 || measured <= baseline + tolerance) {
       next = Math.max(min, baseline)
     }
     el.style.height = `${next}px`
