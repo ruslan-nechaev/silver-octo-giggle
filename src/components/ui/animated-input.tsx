@@ -18,7 +18,6 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
   const handleAutoResize = useCallback(() => {
     const el = textareaRef.current
     if (!el) return
-    el.style.height = "auto"
     const min = 44
     const max = maxH
     // compute single-line baseline height if unknown
@@ -28,21 +27,20 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
     const pb = parseFloat(cs.paddingBottom || "10") || 10
     const baseline = Math.max(44, lh + pt + pb)
     baselineRef.current = baseline
-    const measured = el.scrollHeight
-    // Строгий порог: не растём, пока высота не превысила baseline почти на полную высоту строки
-    const secondLineThreshold = baseline + lh * 0.98
-    let next = Math.max(min, baseline)
-    if (value.trim().length > 0 && measured >= secondLineThreshold) {
-      // вычислим целевую высоту по количеству строк, но только после порога
-      const contentHeight = Math.max(0, measured - pt - pb)
-      const lines = Math.round(contentHeight / lh)
-      const target = baseline + Math.max(0, lines - 1) * lh
-      next = Math.min(max, Math.max(target, baseline))
-    }
+    // Установим высоту в baseline для корректного измерения переполнения
+    el.style.height = `${baseline}px`
+    const contentHeight = Math.max(0, el.scrollHeight - pt - pb)
+    const lines = Math.max(1, Math.ceil((contentHeight + 0.5) / lh))
+    const extraLines = Math.max(0, lines - 1)
+    const maxExtraLines = Math.max(0, Math.floor((max - baseline) / lh))
+    const visibleExtraLines = Math.min(extraLines, maxExtraLines)
+    const next = baseline + visibleExtraLines * lh
     el.style.height = `${next}px`
-    el.style.overflowY = el.scrollHeight > max ? "auto" : "hidden"
+    el.style.overflowY = extraLines > maxExtraLines ? "auto" : "hidden"
     setBoxHeight(next)
-    el.scrollTop = el.scrollHeight
+    if (el.style.overflowY === 'auto') {
+      el.scrollTop = el.scrollHeight
+    }
   }, [maxH, value])
 
   useEffect(() => {
