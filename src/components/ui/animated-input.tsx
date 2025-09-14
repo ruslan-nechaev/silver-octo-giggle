@@ -18,23 +18,21 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
   const handleAutoResize = useCallback(() => {
     const el = textareaRef.current
     if (!el) return
-    const min = 44
+    // Строгие константы для стабильности
+    const BASELINE = 44
+    const LINE = 24
+    const PT = 10
+    const PB = 10
+    const min = BASELINE
     const max = maxH
-    // compute single-line baseline height if unknown
-    const cs = window.getComputedStyle(el)
-    const lh = parseFloat(cs.lineHeight || "24") || 24
-    const pt = parseFloat(cs.paddingTop || "10") || 10
-    const pb = parseFloat(cs.paddingBottom || "10") || 10
-    const baseline = Math.max(44, lh + pt + pb)
-    baselineRef.current = baseline
-    // Установим высоту в baseline для корректного измерения переполнения
-    el.style.height = `${baseline}px`
-    const contentHeight = Math.max(0, el.scrollHeight - pt - pb)
-    const lines = Math.max(1, Math.ceil((contentHeight + 0.5) / lh))
+    // Сначала фиксируем высоту в baseline, чтобы измерение было корректным
+    el.style.height = `${BASELINE}px`
+    const contentHeight = Math.max(0, el.scrollHeight - (PT + PB))
+    const lines = Math.max(1, Math.ceil(contentHeight / LINE))
     const extraLines = Math.max(0, lines - 1)
-    const maxExtraLines = Math.max(0, Math.floor((max - baseline) / lh))
+    const maxExtraLines = Math.max(0, Math.floor((max - BASELINE) / LINE))
     const visibleExtraLines = Math.min(extraLines, maxExtraLines)
-    const next = baseline + visibleExtraLines * lh
+    const next = BASELINE + visibleExtraLines * LINE
     el.style.height = `${next}px`
     el.style.overflowY = extraLines > maxExtraLines ? "auto" : "hidden"
     setBoxHeight(next)
