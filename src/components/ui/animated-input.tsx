@@ -14,10 +14,18 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
   const [maxH, setMaxH] = useState<number>(120)
   const [fontPx, setFontPx] = useState<number>(15)
   const baselineRef = useRef<number>(44)
+  const [hasInput, setHasInput] = useState<boolean>(false)
 
   const handleAutoResize = useCallback(() => {
     const el = textareaRef.current
     if (!el) return
+    // Пока пользователь ничего не ввёл — держим фиксированно 44px
+    if (!hasInput) {
+      el.style.height = `44px`
+      el.style.overflowY = 'hidden'
+      setBoxHeight(44)
+      return
+    }
     // Строгие константы для стабильности
     const BASELINE = 44
     const LINE = 24
@@ -41,11 +49,11 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
     if (el.style.overflowY === 'auto') {
       el.scrollTop = el.scrollHeight
     }
-  }, [maxH, value])
+  }, [maxH, value, hasInput])
 
   useEffect(() => {
     handleAutoResize()
-  }, [value, handleAutoResize])
+  }, [value, hasInput, handleAutoResize])
 
   useEffect(() => {
     const applyResponsive = () => {
@@ -128,7 +136,11 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
         <textarea
           ref={textareaRef}
             value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={(e) => {
+            const nextVal = e.target.value
+            setValue(nextVal)
+            setHasInput(nextVal.trim().length > 0)
+          }}
           onKeyDown={handleKeyDown}
             onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
