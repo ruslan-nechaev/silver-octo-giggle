@@ -175,13 +175,13 @@ export function App(): JSX.Element {
 
       {/* Чат: всегда смонтирован, переключаем видимость */}
       <div className={`absolute z-20 inset-x-0 top-[144px] md:top-[160px] bottom-[160px] md:bottom-[176px] flex justify-center px-4 transition-opacity duration-300 ${showTimeline ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'}`}>
-          <div className="w-full max-w-xl h-full relative">
+          <div className="w-full h-full relative flex justify-center">
             {/* Лента сообщений ниже, отступ сохранён под глобальную линию */}
             <div
               ref={listRef}
-              className={`h-full overflow-y-auto no-scrollbar touch-pan-y space-y-4 ${
+              className={`h-full overflow-y-auto no-scrollbar touch-pan-y ${
                 (messages[0]?.text === GREETING_TEXT ? 'pt-0' : 'pt-10')
-              } pb-6 md:pb-8 overscroll-contain`}
+              } pb-6 md:pb-8 overscroll-contain w-full max-w-[680px] mx-auto space-y-3`}
               style={{ WebkitOverflowScrolling: 'touch' as any }}
             >
           {messages.map((msg) => {
@@ -196,7 +196,7 @@ export function App(): JSX.Element {
                       animateBy="words"
                       direction="top"
                       layout="block"
-                      className="silk-type text-[17px] md:text-[18px] leading-snug tracking-[0.01em] text-white whitespace-pre-wrap break-words"
+                      className="coach-text text-[15px] leading-[24px] tracking-[0.01em] text-white whitespace-pre-wrap break-words"
                     />
                     {msg.text === GREETING_TEXT && (
                       <div className="mt-3 grid grid-cols-3 gap-2">
@@ -221,7 +221,7 @@ export function App(): JSX.Element {
                       animateBy="words"
                       direction="top"
                       layout="block"
-                      className={`silk-type text-[17px] md:text-[18px] leading-snug tracking-[0.01em] ${msg.role === 'user' ? 'text-black' : 'text-white'} m-0`}
+                      className={`coach-text text-[15px] leading-[24px] tracking-[0.01em] ${msg.role === 'user' ? 'text-black' : 'text-white'} m-0`}
                     />
                   </motion.div>
                 )}

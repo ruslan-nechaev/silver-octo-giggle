@@ -12,6 +12,8 @@
   }
   /* Font for text-glow-hover demo */
   @import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap');
+  /* Inter for chat text */
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 }
 
 @layer components {
@@ -50,6 +52,7 @@
 }
 
 @layer utilities {
+  .coach-text { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
   .aura-glow {
     filter: drop-shadow(var(--aura-glow));
   }
