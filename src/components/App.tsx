@@ -236,7 +236,7 @@ export function App(): JSX.Element {
       {/* Нижняя панель: только управление и инпут (без дублей кнопок) */}
       <div className="absolute inset-x-0 bottom-2 z-40 flex flex-col items-center gap-3 px-3 transition-all duration-500 ease-out">
         <PearlButton
-          label="План"
+          label="План тренировок"
           onClick={() => {
             const hasPlan = Array.isArray(planTimeline) && planTimeline.length > 0;
             if (!hasPlan) {

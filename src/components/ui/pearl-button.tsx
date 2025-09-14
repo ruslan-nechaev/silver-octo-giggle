@@ -46,13 +46,15 @@ export const PearlButton: React.FC<PearlButtonProps> = ({
         @media (min-width: 768px) {
           .pearl-button .wrap { font-size: 26px; padding: 28px 48px; }
         }
-        .pearl-button .wrap p span:nth-child(2) { display: none; }
-        .pearl-button:hover .wrap p span:nth-child(1) { display: none; }
-        .pearl-button:hover .wrap p span:nth-child(2) { display: inline-block; }
+        .pearl-button .wrap p .star-hover { display: none; }
+        .pearl-button:hover .wrap p .star-default { display: none; }
+        .pearl-button:hover .wrap p .star-hover { display: inline-block; }
         .pearl-button .wrap p {
           display: flex;
           align-items: center;
+          justify-content: center;
           gap: 12px;
+          width: 100%;
           margin: 0;
           transition: all 0.2s ease;
           transform: translateY(2%);
@@ -113,9 +115,9 @@ export const PearlButton: React.FC<PearlButtonProps> = ({
       <button className={`pearl-button ${className}`} {...props}>
         <div className="wrap">
           <p>
-            <span>✧</span>
-            <span>✦</span>
-            {label}
+            <span className="label-text">{label}</span>
+            <span className="star-default">✧</span>
+            <span className="star-hover">✦</span>
           </p>
         </div>
       </button>
