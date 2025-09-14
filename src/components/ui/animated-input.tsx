@@ -66,18 +66,18 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
   return (
     <form className="w-full" onSubmit={handleSend}>
       <div
-        className="relative w-full rounded-[24px] bg-[#2E2E2E] px-0 py-[10px]"
+        className="relative w-full rounded-[24px] bg-[#2E2E2E] px-0 py-0"
         style={{
           minHeight: 44,
           height: 44,
         }}
       >
-        {/* Right send button: 36x36 circle, 12px from right, fades in when text present */}
+        {/* Right send button: 36x36 circle, 12px from right, 4px top/bottom */}
         <button
           type="submit"
           aria-label="Send"
           aria-disabled={!hasText}
-          className={`absolute right-3 top-1/2 -translate-y-1/2 w-[36px] h-[36px] rounded-full bg-white flex items-center justify-center transition-opacity duration-200 active:scale-95 ${
+          className={`absolute right-3 top-[4px] bottom-[4px] my-auto w-[36px] h-[36px] rounded-full bg-white flex items-center justify-center transition-opacity duration-200 active:scale-95 ${
             hasText ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
           }`}
         >
@@ -96,7 +96,7 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
             onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
             spellCheck={false}
-          className={`coach-text block w-full resize-none bg-transparent text-white placeholder-[#A0A0A0] outline-none border-none text-[15px] leading-[1.6] pl-4 pr-[44px]`}
+          className={`coach-text block w-full resize-none bg-transparent text-white placeholder-[#A0A0A0] outline-none border-none text-[15px] leading-[1.6] pl-4 pr-[44px] py-[10px]`}
           style={{ minHeight: 44, maxHeight: 120 }}
           aria-label="Input"
         />
