@@ -174,7 +174,7 @@ export function App(): JSX.Element {
       </div>
 
       {/* Чат: всегда смонтирован, переключаем видимость */}
-      <div className={`absolute z-20 inset-x-0 top-28 md:top-36 bottom-[240px] md:bottom-[280px] flex justify-center px-4 transition-opacity duration-300 ${showTimeline ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'}`}>
+      <div className={`absolute z-20 inset-x-0 top-24 md:top-32 bottom-[240px] md:bottom-[280px] flex justify-center px-4 transition-opacity duration-300 ${showTimeline ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'}`}>
           <div className="w-full max-w-xl h-full relative">
             {/* Лента сообщений ниже, отступ сохранён под глобальную линию */}
             <div ref={listRef} className="h-full overflow-y-auto no-scrollbar touch-pan-y space-y-4 pt-10 pb-6 md:pb-8 overscroll-contain" style={{ WebkitOverflowScrolling: 'touch' as any }}>
@@ -184,12 +184,6 @@ export function App(): JSX.Element {
               <div key={msg.id} className={`flex ${isPlain ? 'justify-start' : (msg.role === 'user' ? 'justify-end' : 'justify-start')}`}>
                 {isPlain ? (
                   <div className="max-w-[96%] md:max-w-[92%] mr-auto">
-                    <div className="relative h-5 md:h-6 mb-2">
-                      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-px md:h-[2px] bg-white/30"></div>
-                      <span className="absolute left-1/2 -translate-x-1/2 px-1 text-[#FFD700] text-[12px] md:text-[13px] font-semibold leading-none tracking-wide">
-                        Fit Coach
-                      </span>
-                    </div>
                     <BlurText
                       text={msg.text}
                       delay={60}
