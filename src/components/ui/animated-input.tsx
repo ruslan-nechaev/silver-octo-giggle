@@ -121,7 +121,7 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
           type="submit"
           aria-label="Send"
           aria-disabled={!hasText}
-          className={`absolute right-[12px] top-[4px] bottom-[4px] my-auto w-[36px] h-[36px] rounded-full bg-white flex items-center justify-center transition-opacity active:scale-95 ${
+          className={`absolute right-[8px] top-[4px] bottom-[4px] my-auto w-[36px] h-[36px] rounded-full bg-white flex items-center justify-center transition-opacity active:scale-95 ${
             hasText ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
           }`}
           style={{ transition: 'opacity 120ms ease' }}
@@ -162,7 +162,7 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
           onKeyDownCapture={() => { hasUserGestureRef.current = true }}
           onBlur={() => setIsFocused(false)}
           spellCheck={false}
-          className={`coach-text block w-full resize-none bg-transparent text-white placeholder-[#A0A0A0] outline-none border-none leading-[24px] pl-4 pr-[60px] py-[10px]`}
+          className={`coach-text block w-full resize-none bg-transparent text-white placeholder-[#A0A0A0] outline-none border-none leading-[24px] pl-4 pr-[44px] py-[10px]`}
           rows={1}
           style={{ height: '100%', maxHeight: 120, fontSize: 15, boxSizing: 'border-box' }}
           aria-label="Input"
