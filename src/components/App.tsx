@@ -4,6 +4,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Component as SilkBackground } from '@/components/ui/silk-background-animation'
+import AuraBadge from '@/components/ui/aura-badge'
 import { LavaLamp } from '@/components/ui/fluid-blob'
 import { OrbInput } from '@/components/ui/animated-input'
 import { PearlButton } from '@/components/ui/pearl-button'
@@ -133,6 +134,8 @@ export function App(): JSX.Element {
 
   return (
     <div className="h-screen w-screen relative overflow-hidden bg-black rounded-none border-0 outline-none">
+      {/* Step 1: Fixed top-center Aura badge placeholder */}
+      <AuraBadge value={999} />
       {/* Lightweight background on main screen for smoothness */}
       <SilkBackground showCopy={false} mode="lite" />
       {/* Награда: чуть ниже верхнего края, чтобы не вылезала за рамку */}
