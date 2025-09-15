@@ -16,7 +16,7 @@ function formatAuraNumber(raw: number): string {
 
 export const AuraBadge: React.FC<AuraBadgeProps> = ({ value, className }) => {
   const prefersDark = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-  const textColor = prefersDark ? '#FFFFFF' : '#000000'
+  const textColor = '#FFFFFF'
 
   // Debounce value updates and animate on increase
   const [debounced, setDebounced] = useState<number>(value)
@@ -60,7 +60,7 @@ export const AuraBadge: React.FC<AuraBadgeProps> = ({ value, className }) => {
           </linearGradient>
         </defs>
         <circle cx="8" cy="8" r="7" fill="url(#auraGrad)" />
-        <circle cx="8" cy="8" r="5" fill="transparent" stroke={textColor} strokeOpacity=".15" />
+        <circle cx="8" cy="8" r="5" fill="transparent" stroke={prefersDark ? '#FFFFFF' : '#000000'} strokeOpacity=".15" />
       </svg>
       <span className="w-[6px]" />
       <span

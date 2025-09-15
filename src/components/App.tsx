@@ -138,21 +138,7 @@ export function App(): JSX.Element {
       <SilkBackground showCopy={false} mode="lite" />
       {/* New compact Aura badge */}
       <AuraBadge value={999} />
-      {/* Награда: чуть ниже верхнего края, чтобы не вылезала за рамку */}
-      <div className="absolute inset-x-0 top-[5px] md:top-[8px] z-20 flex justify-center">
-        <div className="relative w-[700px] h-[96px] md:w-[900px] md:h-[104px] overflow-visible">
-          <TextGlow
-            text="Aura"
-            backgroundColor="transparent"
-            font={{ fontFamily: 'system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif', fontSize: 60, fontWeight: 800 }}
-            shadowColor="#FFFFFF"
-            useGradientGlow={false}
-            animateGlow={false}
-            glowBlur={48}
-            glowOpacity={1.5 as unknown as number}
-          />
-        </div>
-      </div>
+      {/* Удалён крупный фон с текстом "Aura" по требованию */}
       {/* Убрали старую линию и число, чтобы не дублировать элементы */}
       {/* Временная навигация: держим смонтированной, переключаем видимость CSS-классами */}
       <div className={`absolute inset-0 z-30 flex items-center justify-center transition-all duration-500 ease-out ${showTimeline ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
