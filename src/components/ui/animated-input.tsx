@@ -11,16 +11,16 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
   const [isFocused, setIsFocused] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
   const [boxHeight, setBoxHeight] = useState<number>(44)
-  const [maxH, setMaxH] = useState<number>(120)
-  const [fontPx, setFontPx] = useState<number>(15)
-  const baselineRef = useRef<number>(44)
-  const [hasInput, setHasInput] = useState<boolean>(false)
+  const [isGrowthEnabled, setIsGrowthEnabled] = useState<boolean>(false)
+  const hasUserGestureRef = useRef<boolean>(false)
+  const heightPx = isGrowthEnabled ? boxHeight : 44
+  const heightTransition = isGrowthEnabled ? 'height 150ms ease' : 'none'
 
   const handleAutoResize = useCallback(() => {
     const el = textareaRef.current
     if (!el) return
-    // Пока пользователь ничего не ввёл — держим фиксированно 44px
-    if (!hasInput) {
+    // Пока не было реального пользовательского ввода — всегда 44px
+    if (!isGrowthEnabled) {
       el.style.height = `44px`
       el.style.overflowY = 'hidden'
       setBoxHeight(44)
@@ -32,7 +32,8 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
     const PT = 10
     const PB = 10
     const min = BASELINE
-    const max = maxH
+    const MAX = 120
+    const max = MAX
     // Сначала фиксируем высоту в baseline, чтобы измерение было корректным
     el.style.height = `${BASELINE}px`
     const contentHeight = Math.max(0, el.scrollHeight - (PT + PB))
@@ -49,25 +50,16 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
     if (el.style.overflowY === 'auto') {
       el.scrollTop = el.scrollHeight
     }
-  }, [maxH, value, hasInput])
+  }, [isGrowthEnabled])
 
+  // Не пересчитываем высоту на монтировании; лишь явно фиксируем baseline 44px
   useEffect(() => {
-    handleAutoResize()
-  }, [value, hasInput, handleAutoResize])
-
-  useEffect(() => {
-    const applyResponsive = () => {
-      const w = typeof window !== 'undefined' ? window.innerWidth : 9999
-      const small = w < 360
-      setMaxH(small ? 100 : 120)
-      setFontPx(small ? 14 : 15)
-      // re-evaluate height with new constraints
-      if (hasInput) requestAnimationFrame(handleAutoResize)
+    const el = textareaRef.current
+    if (el) {
+      el.style.height = `44px`
+      el.style.overflowY = 'hidden'
     }
-    applyResponsive()
-    window.addEventListener('resize', applyResponsive)
-    return () => window.removeEventListener('resize', applyResponsive)
-  }, [handleAutoResize, hasInput])
+  }, [])
 
   const handleSend = useCallback((e?: React.FormEvent) => {
     if (e) e.preventDefault()
@@ -75,8 +67,14 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
     if (!trimmed) return
     onSend?.(trimmed)
     setValue("")
-    requestAnimationFrame(handleAutoResize)
-  }, [onSend, value, handleAutoResize])
+    setIsGrowthEnabled(false)
+    const el = textareaRef.current
+    if (el) {
+      el.style.height = `44px`
+      el.style.overflowY = 'hidden'
+    }
+    setBoxHeight(44)
+  }, [onSend, value])
 
   const placeholders = useMemo(
     () => [
@@ -112,8 +110,10 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
         className="relative w-full rounded-[24px] bg-[#2E2E2E] px-0 py-0"
         style={{
           minHeight: 44,
-          height: boxHeight,
-          transition: 'height 150ms ease',
+          height: heightPx,
+          transition: heightTransition,
+          overflow: 'hidden',
+          contain: 'layout paint size',
         }}
       >
         {/* Right send button: 36x36 circle, 12px from right, 4px top/bottom */}
@@ -135,18 +135,36 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
         {/* Text area */}
         <textarea
           ref={textareaRef}
-            value={value}
-          onChange={(e) => {
-            const nextVal = e.target.value
+          value={value}
+          onInput={(e) => {
+            const el = e.currentTarget
+            const nextVal = el.value
             setValue(nextVal)
-            setHasInput(nextVal.trim().length > 0)
+            const native = e.nativeEvent as InputEvent
+            const trusted = native && (native as any).isTrusted === true
+            // Рост поля только после явного пользовательского жеста + trusted input
+            if (!trusted || !hasUserGestureRef.current) return
+            const hasText = nextVal.trim().length > 0
+            if (!hasText) {
+              setIsGrowthEnabled(false)
+              el.style.height = `44px`
+              el.style.overflowY = 'hidden'
+              setBoxHeight(44)
+              return
+            }
+            if (!isGrowthEnabled) setIsGrowthEnabled(true)
+            // Высчитываем высоту только после первого реального ввода и при непустом тексте
+            handleAutoResize()
           }}
           onKeyDown={handleKeyDown}
-            onFocus={() => setIsFocused(true)}
+          onFocus={() => setIsFocused(true)}
+          onPointerDown={() => { hasUserGestureRef.current = true }}
+          onKeyDownCapture={() => { hasUserGestureRef.current = true }}
           onBlur={() => setIsFocused(false)}
-            spellCheck={false}
-          className={`coach-text block w-full resize-none bg-transparent text-white placeholder-[#A0A0A0] outline-none border-none leading-[1.6] pl-4 pr-[60px] py-[10px]`}
-          style={{ minHeight: 44, maxHeight: maxH, fontSize: fontPx }}
+          spellCheck={false}
+          className={`coach-text block w-full resize-none bg-transparent text-white placeholder-[#A0A0A0] outline-none border-none leading-[24px] pl-4 pr-[60px] py-[10px]`}
+          rows={1}
+          style={{ height: '100%', maxHeight: 120, fontSize: 15, boxSizing: 'border-box' }}
           aria-label="Input"
         />
 
