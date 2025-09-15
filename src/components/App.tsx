@@ -214,7 +214,7 @@ export function App(): JSX.Element {
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     transition={{ type: 'spring', stiffness: 260, damping: 30 }}
-                    style={{ overflow: 'hidden' }}
+                    style={{ overflow: 'hidden', backgroundColor: msg.role === 'user' ? '#2E2E2E' : undefined }}
                     {...(msg.role === 'user' ? { 'data-user-msg': 'true' } : {})}
                   >
                     <BlurText
