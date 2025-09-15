@@ -15,9 +15,29 @@ function formatAuraNumber(raw: number): string {
 }
 
 export const AuraBadge: React.FC<AuraBadgeProps> = ({ value, className }) => {
-  const display = useMemo(() => formatAuraNumber(value), [value])
   const prefersDark = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
   const textColor = prefersDark ? '#FFFFFF' : '#000000'
+
+  // Debounce value updates and animate on increase
+  const [debounced, setDebounced] = useState<number>(value)
+  const prevRef = useRef<number>(value)
+  const [animate, setAnimate] = useState<boolean>(false)
+  const reducedMotion = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+  useEffect(() => {
+    const t = setTimeout(() => {
+      const previous = prevRef.current
+      setDebounced(value)
+      if (!reducedMotion && value > previous) {
+        setAnimate(true)
+        setTimeout(() => setAnimate(false), 500)
+      }
+      prevRef.current = value
+    }, 150)
+    return () => clearTimeout(t)
+  }, [value, reducedMotion])
+
+  const display = useMemo(() => formatAuraNumber(debounced), [debounced])
 
   return (
     <div
@@ -25,9 +45,10 @@ export const AuraBadge: React.FC<AuraBadgeProps> = ({ value, className }) => {
         `fixed top-[8px] left-1/2 -translate-x-1/2 h-[32px] max-w-[220px] 
          inline-flex items-center justify-center rounded-[12px] z-[60] pointer-events-none 
          px-3 py-1 bg-[rgba(255,255,255,0.8)] dark:bg-[rgba(18,18,18,0.6)] 
-         backdrop-blur-[12px] shadow-[0_4px_12px_rgba(0,0,0,0.08)] ${className ?? ''}`
+         backdrop-blur-[12px] shadow-[0_4px_12px_rgba(0,0,0,0.08)] 
+         transition-transform duration-200 ${animate ? 'scale-[1.10]' : 'scale-100'} ${className ?? ''}`
       }
-      aria-live="off"
+      aria-live="polite"
       role="status"
     >
       {/* Icon 16x16 */}
@@ -43,9 +64,9 @@ export const AuraBadge: React.FC<AuraBadgeProps> = ({ value, className }) => {
       </svg>
       <span className="w-[6px]" />
       <span
-        className="whitespace-nowrap select-none"
+        className="whitespace-nowrap select-none max-w-[220px] truncate md:max-w-[220px]"
         style={{
-          fontSize: 15,
+          fontSize: typeof window !== 'undefined' && window.innerWidth < 360 ? 14 : 15,
           fontWeight: 600,
           lineHeight: '20px',
           letterSpacing: '0.2px',
