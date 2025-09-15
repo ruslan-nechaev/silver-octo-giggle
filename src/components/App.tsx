@@ -4,7 +4,6 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Component as SilkBackground } from '@/components/ui/silk-background-animation'
-import AuraBadge from '@/components/ui/aura-badge'
 import { LavaLamp } from '@/components/ui/fluid-blob'
 import { OrbInput } from '@/components/ui/animated-input'
 import { PearlButton } from '@/components/ui/pearl-button'
@@ -134,8 +133,6 @@ export function App(): JSX.Element {
 
   return (
     <div className="h-screen w-screen relative overflow-hidden bg-black rounded-none border-0 outline-none">
-      {/* Step 1: Fixed top-center Aura badge placeholder */}
-      <AuraBadge value={999} />
       {/* Lightweight background on main screen for smoothness */}
       <SilkBackground showCopy={false} mode="lite" />
       {/* Награда: чуть ниже верхнего края, чтобы не вылезала за рамку */}
@@ -153,11 +150,10 @@ export function App(): JSX.Element {
           />
         </div>
       </div>
-      {/* Глобальная верхняя линейная рамка и число: фиксированное положение под заголовком */}
+      {/* Глобальная верхняя линейная рамка под заголовком (без числа) */}
       <div className="pointer-events-none absolute inset-x-0 top-[86px] md:top-[92px] h-[48px] flex items-center justify-center z-50">
         <div className="absolute left-2 top-1/2 -translate-y-1/2 h-[2px] rounded-full bg-white/90" style={{ right: 'calc(50% + 84px)' }} />
         <div className="absolute right-2 top-1/2 -translate-y-1/2 h-[2px] rounded-full bg-white/90" style={{ left: 'calc(50% + 84px)' }} />
-        <span className="silk-type text-[#FFD700] text-3xl md:text-4xl font-extrabold leading-none select-none z-10">999</span>
       </div>
       {/* Временная навигация: держим смонтированной, переключаем видимость CSS-классами */}
       <div className={`absolute inset-0 z-30 flex items-center justify-center transition-all duration-500 ease-out ${showTimeline ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
