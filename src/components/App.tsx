@@ -181,7 +181,7 @@ export function App(): JSX.Element {
               ref={listRef}
               className={`h-full overflow-y-auto no-scrollbar touch-pan-y ${
                 (messages[0]?.text === GREETING_TEXT ? 'pt-0' : 'pt-10')
-              } pb-6 md:pb-8 overscroll-contain w-full max-w-[680px] mx-auto space-y-2 md:space-y-3`}
+              } pb-6 overscroll-contain w-full space-y-2`}
               style={{ WebkitOverflowScrolling: 'touch' as any }}
             >
           {messages.map((msg) => {
@@ -208,7 +208,9 @@ export function App(): JSX.Element {
                   </div>
                 ) : (
                   <motion.div
-                    className={`${msg.role === 'user' ? 'bg-white text-black rounded-2xl rounded-br-none max-w-[52%] md:max-w-[48%] px-4 py-3' : 'bg-white/10 text-white rounded-3xl max-w-[85%] px-4 py-3'} shadow-lg backdrop-blur-sm whitespace-pre-wrap break-words`}
+                    className={`${msg.role === 'user' 
+                      ? 'inline-block bg-[#007AFF] text-white rounded-[16px] max-w-[75%] px-3 py-2 mr-3'
+                      : 'bg-white/10 text-white rounded-3xl max-w-[85%] px-4 py-3'} shadow-lg backdrop-blur-sm whitespace-pre-wrap break-words`}
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     transition={{ type: 'spring', stiffness: 260, damping: 30 }}
@@ -221,7 +223,7 @@ export function App(): JSX.Element {
                       animateBy="words"
                       direction="top"
                       layout="block"
-                      className={`coach-text text-[15px] leading-[24px] tracking-[0.01em] ${msg.role === 'user' ? 'text-black' : 'text-white'} m-0`}
+                      className={`coach-text text-[15px] leading-[20px] tracking-[0.01em] ${msg.role === 'user' ? 'text-white' : 'text-white'} m-0 text-left`}
                     />
                   </motion.div>
                 )}
