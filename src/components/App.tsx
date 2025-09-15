@@ -4,6 +4,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Component as SilkBackground } from '@/components/ui/silk-background-animation'
+import AuraBadge from '@/components/ui/aura-badge'
 import { LavaLamp } from '@/components/ui/fluid-blob'
 import { OrbInput } from '@/components/ui/animated-input'
 import { PearlButton } from '@/components/ui/pearl-button'
@@ -135,6 +136,8 @@ export function App(): JSX.Element {
     <div className="h-screen w-screen relative overflow-hidden bg-black rounded-none border-0 outline-none">
       {/* Lightweight background on main screen for smoothness */}
       <SilkBackground showCopy={false} mode="lite" />
+      {/* New compact Aura badge */}
+      <AuraBadge value={999} />
       {/* Награда: чуть ниже верхнего края, чтобы не вылезала за рамку */}
       <div className="absolute inset-x-0 top-[5px] md:top-[8px] z-20 flex justify-center">
         <div className="relative w-[700px] h-[96px] md:w-[900px] md:h-[104px] overflow-visible">
@@ -150,11 +153,7 @@ export function App(): JSX.Element {
           />
         </div>
       </div>
-      {/* Глобальная верхняя линейная рамка под заголовком (без числа) */}
-      <div className="pointer-events-none absolute inset-x-0 top-[86px] md:top-[92px] h-[48px] flex items-center justify-center z-50">
-        <div className="absolute left-2 top-1/2 -translate-y-1/2 h-[2px] rounded-full bg-white/90" style={{ right: 'calc(50% + 84px)' }} />
-        <div className="absolute right-2 top-1/2 -translate-y-1/2 h-[2px] rounded-full bg-white/90" style={{ left: 'calc(50% + 84px)' }} />
-      </div>
+      {/* Убрали старую линию и число, чтобы не дублировать элементы */}
       {/* Временная навигация: держим смонтированной, переключаем видимость CSS-классами */}
       <div className={`absolute inset-0 z-30 flex items-center justify-center transition-all duration-500 ease-out ${showTimeline ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
         <div className="w-full h-full md:scale-100 scale-[0.8] origin-center transition-transform duration-500 ease-out">
