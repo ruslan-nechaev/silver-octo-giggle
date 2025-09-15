@@ -99,4 +99,10 @@
   100% { transform: rotate(0); }
 }
 
+/* Aura indeterminate shimmer */
+@keyframes auraShimmer {
+  0% { background-position: 0% 0; }
+  100% { background-position: 200% 0; }
+}
+
 
