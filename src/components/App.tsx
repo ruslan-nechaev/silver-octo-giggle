@@ -8,6 +8,7 @@ import AuraBadge from '@/components/ui/aura-badge'
 import { LavaLamp } from '@/components/ui/fluid-blob'
 import { OrbInput } from '@/components/ui/animated-input'
 import { PearlButton } from '@/components/ui/pearl-button'
+import AuraFooter from '@/components/ui/aura-footer'
 import RadialOrbitalTimeline from '@/components/ui/radial-orbital-timeline'
 import { Calendar, FileText, Code, User, Clock } from 'lucide-react'
 import WeatherButton from '@/components/ui/button'
@@ -218,29 +219,31 @@ export function App(): JSX.Element {
       </div>
       </div>
 
-      {/* Нижняя панель: только управление и инпут (без дублей кнопок) */}
-      <div className="absolute inset-x-0 bottom-2 z-40 flex flex-col items-center gap-3 px-3 transition-all duration-500 ease-out">
-        <PearlButton
-          label="План"
-          onClick={() => {
-            const hasPlan = Array.isArray(planTimeline) && planTimeline.length > 0;
-            if (!hasPlan) {
-              setShowTimeline(false);
-              setMessages((m) => [
-                ...m,
-                {
-                  id: createId(),
-                  role: 'bot',
-                  text: 'Отлично, давай создадим для тебя план на день, чтобы ты хотел потренировать?',
-                  variant: 'plain',
-                },
-              ]);
-              return;
-            }
-            setShowTimeline((v) => !v);
-          }}
-          className="w-full max-w-[340px] md:max-w-[560px] contrast-125"
-        />
+      {/* Нижняя панель: Aura footer + инпут */}
+      <div className="absolute inset-x-0 bottom-2 z-40 flex flex-col items-center gap-4 px-3 transition-all duration-500 ease-out">
+        <div className="w-full max-w-[340px] md:max-w-[560px] mx-auto">
+          <AuraFooter
+            value={999}
+            progress={0.35}
+            onPlanClick={() => {
+              const hasPlan = Array.isArray(planTimeline) && planTimeline.length > 0;
+              if (!hasPlan) {
+                setShowTimeline(false);
+                setMessages((m) => [
+                  ...m,
+                  {
+                    id: createId(),
+                    role: 'bot',
+                    text: 'Отлично, давай создадим для тебя план на день, чтобы ты хотел потренировать?',
+                    variant: 'plain',
+                  },
+                ]);
+                return;
+              }
+              setShowTimeline((v) => !v);
+            }}
+          />
+        </div>
         <div className="w-full max-w-[340px] md:max-w-[560px] mx-auto">
           <OrbInput onSend={handleSend} />
         </div>
