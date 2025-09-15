@@ -209,7 +209,7 @@ export function App(): JSX.Element {
                 ) : (
                   <motion.div
                     className={`${msg.role === 'user' 
-                      ? 'inline-block bg-[#007AFF] text-white rounded-[16px] max-w-[75%] px-3 py-2 mr-3'
+                      ? 'inline-block bg-[#2E2E2E] text-white rounded-[16px] max-w-[75%] px-3 py-2 mr-3'
                       : 'bg-white/10 text-white rounded-3xl max-w-[85%] px-4 py-3'} shadow-lg backdrop-blur-sm whitespace-pre-wrap break-words`}
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
