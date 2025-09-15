@@ -105,4 +105,11 @@
   100% { background-position: 200% 0; }
 }
 
+/* Aura HUD particles */
+@keyframes auraParticle {
+  0% { transform: translate(0,0) scale(1); opacity: 0.9; }
+  70% { opacity: 0.6; }
+  100% { transform: translate(0,-24px) scale(0.6); opacity: 0; }
+}
+
 

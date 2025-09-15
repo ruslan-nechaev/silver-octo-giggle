@@ -9,6 +9,7 @@ import { LavaLamp } from '@/components/ui/fluid-blob'
 import { OrbInput } from '@/components/ui/animated-input'
 import { PearlButton } from '@/components/ui/pearl-button'
 import AuraFooter from '@/components/ui/aura-footer'
+import AuraHud from '@/components/ui/aura-hud'
 import RadialOrbitalTimeline from '@/components/ui/radial-orbital-timeline'
 import { Calendar, FileText, Code, User, Clock } from 'lucide-react'
 import WeatherButton from '@/components/ui/button'
@@ -134,6 +135,8 @@ export function App(): JSX.Element {
 
   return (
     <div className="h-screen w-screen relative overflow-hidden bg-black rounded-none border-0 outline-none">
+      {/* Minimalist Aura HUD in the top-right */}
+      <AuraHud value={999} onPlanClick={() => setShowTimeline((v) => !v)} />
       {/* Lightweight background on main screen for smoothness */}
       <SilkBackground showCopy={false} mode="lite" />
       {/* New compact Aura badge */}
