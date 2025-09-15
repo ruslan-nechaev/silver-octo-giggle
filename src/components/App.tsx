@@ -220,11 +220,11 @@ export function App(): JSX.Element {
       </div>
 
       {/* Нижняя панель: Aura footer + инпут */}
-      <div className="absolute inset-x-0 bottom-2 z-40 flex flex-col items-center gap-4 px-3 transition-all duration-500 ease-out">
+      <div className="absolute inset-x-0 bottom-2 z-40 flex flex-col items-center gap-3 px-3 transition-all duration-500 ease-out">
         <div className="w-full max-w-[340px] md:max-w-[560px] mx-auto">
           <AuraFooter
             value={999}
-            progress={0.35}
+            progress={null}
             onPlanClick={() => {
               const hasPlan = Array.isArray(planTimeline) && planTimeline.length > 0;
               if (!hasPlan) {
