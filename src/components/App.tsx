@@ -222,16 +222,16 @@ export function App(): JSX.Element {
 
       {/* Нижняя панель: Aura inline + Plan + инпут */}
       <div className="absolute inset-x-0 bottom-2 z-40 flex flex-col items-center gap-3 px-3 transition-all duration-500 ease-out">
-        {/* Row: centered Aura block (40% width) and Plan button aligned on one line */}
+        {/* Row: centered Aura block (33% width) and Plan button aligned on one line */}
         <div className="w-full max-w-[340px] md:max-w-[560px] mx-auto flex items-center justify-center">
-          <div className="relative" style={{ width: '40%' }}>
+          <div className="relative" style={{ width: '33%' }}>
             <AuraBadge value={999} variant="inline" />
           </div>
           <div style={{ width: '12px' }} />
           <button
             type="button"
             aria-label="Plan"
-            className="w-[32px] h-[32px] rounded-[10px] bg-[#007AFF] flex items-center justify-center active:scale-95"
+            className="w-[44px] h-[36px] rounded-[10px] bg-[#007AFF] flex items-center justify-center active:scale-95"
             onClick={() => {
               const hasPlan = Array.isArray(planTimeline) && planTimeline.length > 0;
               if (!hasPlan) {
