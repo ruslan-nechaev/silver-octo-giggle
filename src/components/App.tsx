@@ -8,8 +8,7 @@ import AuraBadge from '@/components/ui/aura-badge'
 import { LavaLamp } from '@/components/ui/fluid-blob'
 import { OrbInput } from '@/components/ui/animated-input'
 import { PearlButton } from '@/components/ui/pearl-button'
-import AuraFooter from '@/components/ui/aura-footer'
-import AuraHud from '@/components/ui/aura-hud'
+// Removed footer/HUD: render only Plan button above input
 import RadialOrbitalTimeline from '@/components/ui/radial-orbital-timeline'
 import { Calendar, FileText, Code, User, Clock } from 'lucide-react'
 import WeatherButton from '@/components/ui/button'
@@ -31,7 +30,7 @@ export function App(): JSX.Element {
 
   const GREETING_TEXT = useMemo(
     () => (
-      'Привет! 👋\n\nТы получил персонального AI-тренера, который:\n• Всегда онлайн 🔍\n• Готов помочь 💪\n• Фокус на тебе 🎯'
+      'Привет!\n\nТы получил персонального AI-тренера, который:\n• Всегда онлайн\n• Готов помочь\n• Фокус на тебе'
     ),
     []
   )
@@ -135,8 +134,7 @@ export function App(): JSX.Element {
 
   return (
     <div className="h-screen w-screen relative overflow-hidden bg-black rounded-none border-0 outline-none">
-      {/* Minimalist Aura HUD in the top-right */}
-      <AuraHud value={999} onPlanClick={() => setShowTimeline((v) => !v)} />
+      {/* HUD removed */}
       {/* Lightweight background on main screen for smoothness */}
       <SilkBackground showCopy={false} mode="lite" />
       {/* New compact Aura badge */}
@@ -146,8 +144,8 @@ export function App(): JSX.Element {
       {/* Временная навигация: держим смонтированной, переключаем видимость CSS-классами */}
       <div className={`absolute inset-0 z-30 flex items-center justify-center transition-all duration-500 ease-out ${showTimeline ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
         <div className="w-full h-full md:scale-100 scale-[0.8] origin-center transition-transform duration-500 ease-out">
-          <RadialOrbitalTimeline
-            timelineData={
+            <RadialOrbitalTimeline
+              timelineData={
                 planTimeline ?? [
                 { id:1,title:'Planning',date:'Jan 2024',content:'Project planning and requirements gathering phase.',category:'Planning',icon:Calendar,relatedIds:[2],status:'completed',energy:100},
                 { id:2,title:'Design',date:'Feb 2024',content:'UI/UX design and system architecture.',category:'Design',icon:FileText,relatedIds:[1,3],status:'completed',energy:90},
@@ -155,10 +153,10 @@ export function App(): JSX.Element {
                 { id:4,title:'Testing',date:'Apr 2024',content:'User testing and bug fixes.',category:'Testing',icon:User,relatedIds:[3,5],status:'pending',energy:30},
                 { id:5,title:'Release',date:'May 2024',content:'Final deployment and release.',category:'Release',icon:Clock,relatedIds:[4],status:'pending',energy:10},
                 ]
-            }
-          />
+              }
+            />
+          </div>
         </div>
-      </div>
 
       {/* Чат: всегда смонтирован, переключаем видимость */}
       <div className={`absolute z-20 inset-x-0 top-[144px] md:top-[160px] bottom-[160px] md:bottom-[176px] flex justify-center px-0 transition-opacity duration-300 ${showTimeline ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'}`}>
@@ -222,13 +220,14 @@ export function App(): JSX.Element {
       </div>
       </div>
 
-      {/* Нижняя панель: Aura footer + инпут */}
+      {/* Нижняя панель: Plan button (right) + инпут */}
       <div className="absolute inset-x-0 bottom-2 z-40 flex flex-col items-center gap-3 px-3 transition-all duration-500 ease-out">
-        <div className="w-full max-w-[340px] md:max-w-[560px] mx-auto">
-          <AuraFooter
-            value={999}
-            progress={null}
-            onPlanClick={() => {
+        <div className="w-full max-w-[340px] md:max-w-[560px] mx-auto flex justify-end">
+          <button
+            type="button"
+            aria-label="Plan"
+            className="w-[36px] h-[36px] rounded-[10px] bg-[#007AFF] flex items-center justify-center active:scale-95"
+            onClick={() => {
               const hasPlan = Array.isArray(planTimeline) && planTimeline.length > 0;
               if (!hasPlan) {
                 setShowTimeline(false);
@@ -237,7 +236,7 @@ export function App(): JSX.Element {
                   {
                     id: createId(),
                     role: 'bot',
-                    text: 'Отлично, давай создадим для тебя план на день, чтобы ты хотел потренировать?',
+                    text: 'Отлично, давай создадим для тебя план на день. Что хочешь потренировать?',
                     variant: 'plain',
                   },
                 ]);
@@ -245,10 +244,15 @@ export function App(): JSX.Element {
               }
               setShowTimeline((v) => !v);
             }}
-          />
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="4" width="18" height="16" rx="2" ry="2" />
+              <path d="M16 2v4M8 2v4M3 10h18" />
+            </svg>
+          </button>
         </div>
         <div className="w-full max-w-[340px] md:max-w-[560px] mx-auto">
-          <OrbInput onSend={handleSend} />
+        <OrbInput onSend={handleSend} />
         </div>
       </div>
     </div>

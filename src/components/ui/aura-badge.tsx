@@ -15,65 +15,61 @@ function formatAuraNumber(raw: number): string {
 }
 
 export const AuraBadge: React.FC<AuraBadgeProps> = ({ value, className }) => {
-  const prefersDark = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-  const textColor = '#FFFFFF'
-
-  // Debounce value updates and animate on increase
-  const [debounced, setDebounced] = useState<number>(value)
+  // Track increases to pulse the frame
+  const [display, setDisplay] = useState<number>(value)
   const prevRef = useRef<number>(value)
-  const [animate, setAnimate] = useState<boolean>(false)
+  const [pulse, setPulse] = useState<boolean>(false)
   const reducedMotion = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
   useEffect(() => {
-    const t = setTimeout(() => {
-      const previous = prevRef.current
-      setDebounced(value)
-      if (!reducedMotion && value > previous) {
-        setAnimate(true)
-        setTimeout(() => setAnimate(false), 500)
-      }
+    if (value !== display) setDisplay(value)
+    if (!reducedMotion && value > prevRef.current) {
+      setPulse(true)
+      const t = setTimeout(() => setPulse(false), 280)
       prevRef.current = value
-    }, 150)
-    return () => clearTimeout(t)
-  }, [value, reducedMotion])
+      return () => clearTimeout(t)
+    }
+    prevRef.current = value
+  }, [value, display, reducedMotion])
 
-  const display = useMemo(() => formatAuraNumber(debounced), [debounced])
+  const formatted = useMemo(() => formatAuraNumber(display), [display])
 
   return (
     <div
-      className={
-        `fixed top-[8px] left-1/2 -translate-x-1/2 h-[32px] max-w-[220px] 
-         inline-flex items-center justify-center rounded-[12px] z-[60] pointer-events-none 
-         px-3 py-1 bg-[rgba(255,255,255,0.8)] dark:bg-[rgba(18,18,18,0.6)] 
-         backdrop-blur-[12px] shadow-[0_4px_12px_rgba(0,0,0,0.08)] 
-         transition-transform duration-200 ${animate ? 'scale-[1.10]' : 'scale-100'} ${className ?? ''}`
-      }
+      className={`fixed top-[10px] left-[12px] z-[60] inline-flex items-center pointer-events-none ${className ?? ''}`}
+      style={{ gap: 8 }}
       aria-live="polite"
       role="status"
     >
-      {/* Icon 16x16 */}
-      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden focusable="false" className="flex-shrink-0">
-        <defs>
-          <linearGradient id="auraGrad" x1="0" y1="0" x2="16" y2="16" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stopColor="#9AE6B4" />
-            <stop offset="1" stopColor="#60A5FA" />
-          </linearGradient>
-        </defs>
-        <circle cx="8" cy="8" r="7" fill="url(#auraGrad)" />
-        <circle cx="8" cy="8" r="5" fill="transparent" stroke={prefersDark ? '#FFFFFF' : '#000000'} strokeOpacity=".15" />
-      </svg>
-      <span className="w-[6px]" />
+      {/* Left label: Aura */}
       <span
-        className="whitespace-nowrap select-none max-w-[220px] truncate md:max-w-[220px]"
+        className="select-none"
         style={{
-          fontSize: typeof window !== 'undefined' && window.innerWidth < 360 ? 14 : 15,
+          color: '#FFFFFF',
+          fontSize: 16,
           fontWeight: 600,
           lineHeight: '20px',
-          letterSpacing: '0.2px',
-          color: textColor,
+          textShadow: '0 0 6px rgba(255,255,255,0.35)',
         }}
       >
-        {display}
+        Aura
+      </span>
+
+      {/* Right framed number */}
+      <span
+        className={`select-none inline-flex items-center justify-center px-2 py-[2px] rounded-[6px] border`}
+        style={{
+          borderColor: '#FFD700',
+          color: '#FFFFFF',
+          fontSize: 16,
+          fontWeight: 600,
+          lineHeight: '20px',
+          boxShadow: pulse ? '0 0 10px rgba(255,215,0,0.55)' : 'none',
+          transition: 'box-shadow 220ms ease, transform 220ms ease',
+          transform: pulse ? 'scale(1.05)' : 'scale(1)'
+        }}
+      >
+        {formatted}
       </span>
     </div>
   )

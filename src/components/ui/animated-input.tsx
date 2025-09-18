@@ -72,7 +72,7 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
     if (el) {
       el.style.height = `44px`
       el.style.overflowY = 'hidden'
-    }
+  }
     setBoxHeight(44)
   }, [onSend, value])
 
@@ -135,7 +135,7 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
         {/* Text area */}
         <textarea
           ref={textareaRef}
-          value={value}
+            value={value}
           onInput={(e) => {
             const el = e.currentTarget
             const nextVal = el.value
@@ -157,7 +157,7 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
             handleAutoResize()
           }}
           onKeyDown={handleKeyDown}
-          onFocus={() => setIsFocused(true)}
+            onFocus={() => setIsFocused(true)}
           onPointerDown={() => { hasUserGestureRef.current = true }}
           onKeyDownCapture={() => { hasUserGestureRef.current = true }}
           onBlur={() => setIsFocused(false)}
@@ -172,7 +172,7 @@ export const OrbInput = React.memo(function ChatInput({ onSend }: ChatInputProps
         {value.length === 0 && (
           <div className="pointer-events-none absolute left-4 right-[60px] top-1/2 -translate-y-1/2 text-[15px] leading-[1.6] text-[#A0A0A0] coach-text whitespace-nowrap overflow-hidden text-ellipsis">
             {placeholders[placeholderIndex]}
-          </div>
+        </div>
         )}
       </div>
     </form>
