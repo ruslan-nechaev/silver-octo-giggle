@@ -137,8 +137,8 @@ export function App(): JSX.Element {
       {/* HUD removed */}
       {/* Lightweight background on main screen for smoothness */}
       <SilkBackground showCopy={false} mode="lite" />
-      {/* New compact Aura badge */}
-      <AuraBadge value={999} />
+      {/* New compact Aura badge (fixed header) */}
+      <AuraBadge value={999} variant="fixed" />
       {/* Удалён крупный фон с текстом "Aura" по требованию */}
       {/* Убрали старую линию и число, чтобы не дублировать элементы */}
       {/* Временная навигация: держим смонтированной, переключаем видимость CSS-классами */}
@@ -220,8 +220,12 @@ export function App(): JSX.Element {
       </div>
       </div>
 
-      {/* Нижняя панель: Plan button (right) + инпут */}
+      {/* Нижняя панель: Aura inline label + Plan button + инпут */}
       <div className="absolute inset-x-0 bottom-2 z-40 flex flex-col items-center gap-3 px-3 transition-all duration-500 ease-out">
+        {/* Inline Aura above input */}
+        <div className="w-full max-w-[340px] md:max-w-[560px] mx-auto">
+          <AuraBadge value={999} variant="inline" />
+        </div>
         <div className="w-full max-w-[340px] md:max-w-[560px] mx-auto flex justify-end">
           <button
             type="button"

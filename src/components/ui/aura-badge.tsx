@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 type AuraBadgeProps = {
   value: number
   className?: string
+  variant?: 'fixed' | 'inline'
 }
 
 function formatAuraNumber(raw: number): string {
@@ -14,7 +15,7 @@ function formatAuraNumber(raw: number): string {
   return raw.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
 }
 
-export const AuraBadge: React.FC<AuraBadgeProps> = ({ value, className }) => {
+export const AuraBadge: React.FC<AuraBadgeProps> = ({ value, className, variant = 'fixed' }) => {
   // Track increases to pulse the frame
   const [display, setDisplay] = useState<number>(value)
   const prevRef = useRef<number>(value)
@@ -36,7 +37,7 @@ export const AuraBadge: React.FC<AuraBadgeProps> = ({ value, className }) => {
 
   return (
     <div
-      className={`fixed top-[10px] left-[12px] z-[60] inline-flex items-center pointer-events-none ${className ?? ''}`}
+      className={`${variant === 'fixed' ? 'fixed top-[10px] left-[12px] z-[60]' : ''} inline-flex items-center ${variant === 'fixed' ? 'pointer-events-none' : ''} ${className ?? ''}`}
       style={{ gap: 8 }}
       aria-live="polite"
       role="status"
