@@ -225,7 +225,7 @@ export function App(): JSX.Element {
         {/* Row: full-width like input, Aura ~33% and Plan aligned right */}
         <div className="w-full max-w-[340px] md:max-w-[560px] mx-auto flex items-center justify-between">
           <div className="relative" style={{ width: '33%' }}>
-            <AuraBadge value={999} variant="inline" />
+            <AuraBadge value={999} variant="inline" background={false} />
           </div>
           <div className="flex-1" />
           <button

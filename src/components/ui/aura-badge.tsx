@@ -4,6 +4,7 @@ type AuraBadgeProps = {
   value: number
   className?: string
   variant?: 'fixed' | 'inline'
+  background?: boolean
 }
 
 function formatAuraNumber(raw: number): string {
@@ -15,7 +16,7 @@ function formatAuraNumber(raw: number): string {
   return raw.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
 }
 
-export const AuraBadge: React.FC<AuraBadgeProps> = ({ value, className, variant = 'fixed' }) => {
+export const AuraBadge: React.FC<AuraBadgeProps> = ({ value, className, variant = 'fixed', background = true }) => {
   // Track increases to pulse the frame
   const [display, setDisplay] = useState<number>(value)
   const prevRef = useRef<number>(value)
@@ -44,7 +45,7 @@ export const AuraBadge: React.FC<AuraBadgeProps> = ({ value, className, variant 
       role="status"
     >
       {/* Inline blurred container background */}
-      {!isFixed && (
+      {!isFixed && background && (
         <div
           className="absolute inset-0 rounded-[12px] backdrop-blur-md"
           style={{
@@ -71,7 +72,7 @@ export const AuraBadge: React.FC<AuraBadgeProps> = ({ value, className, variant 
 
       {/* Right framed number */}
       <span
-        className={`select-none inline-flex items-center justify-center px-2 py-[2px] rounded-[6px] border`}
+        className={`select-none inline-flex items-center justify-center px-2 py-[4px] rounded-[6px] border`}
         style={{
           borderColor: '#FFD700',
           borderWidth: 2,
