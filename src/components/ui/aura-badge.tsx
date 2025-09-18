@@ -39,7 +39,7 @@ export const AuraBadge: React.FC<AuraBadgeProps> = ({ value, className, variant 
   return (
     <div
       className={`${isFixed ? 'fixed top-[10px] left-[12px] z-[60] pointer-events-none' : 'relative'} inline-flex items-center ${className ?? ''}`}
-      style={{ gap: 8, height: isFixed ? undefined : 36, padding: isFixed ? undefined : '0 10px', borderRadius: isFixed ? undefined : 12 }}
+      style={{ gap: 8, height: isFixed ? undefined : 44, padding: isFixed ? undefined : '0 10px', borderRadius: isFixed ? undefined : 12 }}
       aria-live="polite"
       role="status"
     >
@@ -49,7 +49,8 @@ export const AuraBadge: React.FC<AuraBadgeProps> = ({ value, className, variant 
           className="absolute inset-0 rounded-[12px] backdrop-blur-md"
           style={{
             backgroundColor: 'rgba(0,0,0,0.6)',
-            boxShadow: '0 4px 8px rgba(0,0,0,0.15)'
+            boxShadow: '0 4px 8px rgba(0,0,0,0.15)',
+            zIndex: 0
           }}
         />
       )}
@@ -61,7 +62,8 @@ export const AuraBadge: React.FC<AuraBadgeProps> = ({ value, className, variant 
           fontSize: 16,
           fontWeight: 600,
           lineHeight: '20px',
-          textShadow: '0 0 6px rgba(255,255,255,0.35)',
+          position: 'relative',
+          zIndex: 1,
         }}
       >
         Aura
@@ -79,7 +81,10 @@ export const AuraBadge: React.FC<AuraBadgeProps> = ({ value, className, variant 
           lineHeight: '20px',
           boxShadow: pulse ? '0 0 12px rgba(255,215,0,0.55)' : 'none',
           transition: 'box-shadow 200ms ease, transform 200ms ease',
-          transform: pulse ? 'scale(1.10)' : 'scale(1)'
+          transform: pulse ? 'scale(1.10)' : 'scale(1)',
+          position: 'relative',
+          zIndex: 1,
+          background: 'transparent'
         }}
       >
         {formatted}

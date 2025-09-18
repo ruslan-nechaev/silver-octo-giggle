@@ -222,12 +222,12 @@ export function App(): JSX.Element {
 
       {/* Нижняя панель: Aura inline + Plan + инпут */}
       <div className="absolute inset-x-0 bottom-2 z-40 flex flex-col items-center gap-3 px-3 transition-all duration-500 ease-out">
-        {/* Row: centered Aura block (33% width) and Plan button aligned on one line */}
-        <div className="w-full max-w-[340px] md:max-w-[560px] mx-auto flex items-center justify-center">
+        {/* Row: full-width like input, Aura ~33% and Plan aligned right */}
+        <div className="w-full max-w-[340px] md:max-w-[560px] mx-auto flex items-center justify-between">
           <div className="relative" style={{ width: '33%' }}>
             <AuraBadge value={999} variant="inline" />
           </div>
-          <div style={{ width: '12px' }} />
+          <div className="flex-1" />
           <button
             type="button"
             aria-label="Plan"
