@@ -35,13 +35,24 @@ export const AuraBadge: React.FC<AuraBadgeProps> = ({ value, className, variant 
 
   const formatted = useMemo(() => formatAuraNumber(display), [display])
 
+  const isFixed = variant === 'fixed'
   return (
     <div
-      className={`${variant === 'fixed' ? 'fixed top-[10px] left-[12px] z-[60]' : ''} inline-flex items-center ${variant === 'fixed' ? 'pointer-events-none' : ''} ${className ?? ''}`}
+      className={`${isFixed ? 'fixed top-[10px] left-[12px] z-[60] pointer-events-none' : 'relative'} inline-flex items-center ${className ?? ''}`}
       style={{ gap: 8 }}
       aria-live="polite"
       role="status"
     >
+      {/* Inline blurred container background */}
+      {!isFixed && (
+        <div
+          className="absolute inset-0 rounded-[12px] backdrop-blur-md"
+          style={{
+            backgroundColor: 'rgba(18,18,18,0.6)',
+            boxShadow: '0 4px 8px rgba(0,0,0,0.15)'
+          }}
+        />
+      )}
       {/* Left label: Aura */}
       <span
         className="select-none"
@@ -61,17 +72,26 @@ export const AuraBadge: React.FC<AuraBadgeProps> = ({ value, className, variant 
         className={`select-none inline-flex items-center justify-center px-2 py-[2px] rounded-[6px] border`}
         style={{
           borderColor: '#FFD700',
+          borderWidth: 2,
           color: '#FFFFFF',
           fontSize: 16,
           fontWeight: 600,
           lineHeight: '20px',
-          boxShadow: pulse ? '0 0 10px rgba(255,215,0,0.55)' : 'none',
-          transition: 'box-shadow 220ms ease, transform 220ms ease',
-          transform: pulse ? 'scale(1.05)' : 'scale(1)'
+          boxShadow: pulse ? '0 0 12px rgba(255,215,0,0.55)' : 'none',
+          transition: 'box-shadow 200ms ease, transform 200ms ease',
+          transform: pulse ? 'scale(1.06)' : 'scale(1)'
         }}
       >
         {formatted}
       </span>
+
+      {/* Subtle aura glow on increase */}
+      {!isFixed && pulse && (
+        <div
+          className="pointer-events-none absolute -inset-1 rounded-[14px]"
+          style={{ boxShadow: '0 0 18px rgba(255,215,0,0.35)' }}
+        />
+      )}
     </div>
   )
 }

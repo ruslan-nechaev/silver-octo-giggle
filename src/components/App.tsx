@@ -220,17 +220,18 @@ export function App(): JSX.Element {
       </div>
       </div>
 
-      {/* Нижняя панель: Aura inline label + Plan button + инпут */}
+      {/* Нижняя панель: Aura inline + Plan + инпут */}
       <div className="absolute inset-x-0 bottom-2 z-40 flex flex-col items-center gap-3 px-3 transition-all duration-500 ease-out">
-        {/* Inline Aura above input */}
-        <div className="w-full max-w-[340px] md:max-w-[560px] mx-auto">
-          <AuraBadge value={999} variant="inline" />
-        </div>
-        <div className="w-full max-w-[340px] md:max-w-[560px] mx-auto flex justify-end">
+        {/* Row: centered Aura block (40% width) and Plan button aligned on one line */}
+        <div className="w-full max-w-[340px] md:max-w-[560px] mx-auto flex items-center justify-center">
+          <div className="relative" style={{ width: '40%' }}>
+            <AuraBadge value={999} variant="inline" />
+          </div>
+          <div style={{ width: '12px' }} />
           <button
             type="button"
             aria-label="Plan"
-            className="w-[36px] h-[36px] rounded-[10px] bg-[#007AFF] flex items-center justify-center active:scale-95"
+            className="w-[32px] h-[32px] rounded-[10px] bg-[#007AFF] flex items-center justify-center active:scale-95"
             onClick={() => {
               const hasPlan = Array.isArray(planTimeline) && planTimeline.length > 0;
               if (!hasPlan) {
@@ -249,7 +250,7 @@ export function App(): JSX.Element {
               setShowTimeline((v) => !v);
             }}
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="4" width="18" height="16" rx="2" ry="2" />
               <path d="M16 2v4M8 2v4M3 10h18" />
             </svg>
