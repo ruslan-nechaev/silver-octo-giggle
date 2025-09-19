@@ -4,7 +4,8 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Component as SilkBackground } from '@/components/ui/silk-background-animation'
-import AuraBadge from '@/components/ui/aura-badge'
+// import AuraBadge from '@/components/ui/aura-badge'
+import ActivityChartCard from '@/components/ui/activity-chart-card'
 import { LavaLamp } from '@/components/ui/fluid-blob'
 import { OrbInput } from '@/components/ui/animated-input'
 import { PearlButton } from '@/components/ui/pearl-button'
@@ -137,8 +138,12 @@ export function App(): JSX.Element {
       {/* HUD removed */}
       {/* Lightweight background on main screen for smoothness */}
       <SilkBackground showCopy={false} mode="lite" />
-      {/* New compact Aura badge (fixed header) */}
-      <AuraBadge value={999} variant="fixed" />
+      {/* Activity card replaces Aura */}
+      <div className="fixed top-[10px] left-[12px] z-[60] pointer-events-none">
+        <div className="pointer-events-auto">
+          <ActivityChartCard title="Activity" totalValue="21h" data={[{day:'S',value:8},{day:'M',value:12},{day:'T',value:9},{day:'W',value:4},{day:'T',value:7},{day:'F',value:14},{day:'S',value:2}]} />
+        </div>
+      </div>
       {/* Удалён крупный фон с текстом "Aura" по требованию */}
       {/* Убрали старую линию и число, чтобы не дублировать элементы */}
       {/* Временная навигация: держим смонтированной, переключаем видимость CSS-классами */}
@@ -224,9 +229,7 @@ export function App(): JSX.Element {
       <div className="absolute inset-x-0 bottom-2 z-40 flex flex-col items-center gap-3 px-3 transition-all duration-500 ease-out">
         {/* Row: full-width like input, Aura ~33% and Plan aligned right */}
         <div className="w-full max-w-[340px] md:max-w-[560px] mx-auto flex items-center justify-between">
-          <div className="relative" style={{ width: '33%' }}>
-            <AuraBadge value={999} variant="inline" background={false} />
-          </div>
+          <div className="relative" style={{ width: '33%' }} />
           <div className="flex-1" />
           <button
             type="button"
